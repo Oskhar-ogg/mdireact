@@ -1,15 +1,23 @@
-import React from "react";
-import { View, TouchableOpacity, Dimensions } from "react-native";
-import BottomBar from "./componentes/bottombar";
-import styles from "./style";
+import React, { useEffect, useState } from "react";
+import { View, Dimensions, StyleSheet } from "react-native";
 import { Card, Avatar, Text, Button } from "@rneui/base";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { getAuth, signOut } from 'firebase/auth';
 import { ScrollView } from "react-native";
+import { getTecnico } from "../api";
+import BottomBar from "./componentes/bottombar";
+
+const screenHeight = Dimensions.get('screen').height;
+const screenWidth = Dimensions.get('screen').width;
 
 export default function Perfil() {
   const navigation = useNavigation();
   const auth = getAuth(); // Obtener la instancia de autenticación
+  const [tecnico, setTecnico] = useState({
+    tecnico_nombre: '',
+    tecnico_correo: '',
+    tecnico_telefono: '',
+  });
 
   const handleLogout = async () => {
     try {
@@ -20,40 +28,76 @@ export default function Perfil() {
     }
   };
 
-  return (
+  const cargarTecnico = async () => {
+    try {
+      const tecnicoData = await getTecnico();
+      console.log('Datos del técnico:', tecnicoData); // Agrega esta línea
+      setTecnico({
+        tecnico_nombre: tecnicoData.tecnico_nombre,
+        tecnico_correo: tecnicoData.tecnico_correo,
+        tecnico_telefono: tecnicoData.tecnico_telefono,
+      });
+    } catch (error) {
+      console.error('Error al cargar el técnico:', error);
+    }
+  };
+  
 
+  useEffect(() => {
+    cargarTecnico();
+  }, []);
+
+  return (
     <View style={styles.container}>
-    <ScrollView>
-      <View>
-        <Card style={styles.CenterContainer}>
-          <Card.Title h3>Técnico Autorizado SEC CLASE 3</Card.Title>
-          <TouchableOpacity>
+      <ScrollView>
+        <View>
+          <Card style={styles.CenterContainer}>
+            <Card.Title h3>Técnico Autorizado SEC CLASE 3</Card.Title>
             <Avatar
               size={64}
-              rounded
-              source={require('../src/imagenes/avatar.png')}
-              title="WC"
+              source={require('./imagenes/profile.jpg')}
               containerStyle={{ backgroundColor: 'grey' }}
-            >
-              <Avatar.Accessory size={23} />
-            </Avatar>
-          </TouchableOpacity>
-          <Card.Divider/>
-          <Text h4>Nombre: </Text>
-          
-          {/* Mostrar datos del usuario */}
-          <Card.Divider/>
-          <Text h4>e-RNI QR SEC </Text>
-          <Card.Image style={{ width: 320, height: 350, borderRadius: 18, justifyContent: 'center', alignItems: 'stretch',}}
-            source={require('../assets/qr_sec.png')}></Card.Image>
-          <Button onPress={handleLogout}>Cerrar Sesión</Button>
-        </Card>
-      </View>
-      <View style={{ height: 80 }}></View>
+              rounded
+            />
+            <Card.Divider />
+            <Text h4>Nombre: Walter Caro</Text>
+            <Card.Divider />
+            <Text h4>Correo: mdibiobio2015@gmail.com</Text>
+            <Card.Divider />
+            <Text h4>Teléfono: +56967130030</Text>
+            <Card.Divider />
+            <Text h4>e-RNI QR SEC: </Text>
+            <Card.Image
+              style={{
+                width: 320,
+                height: 350,
+                borderRadius: 18,
+                justifyContent: 'center',
+                alignItems: 'stretch',
+              }}
+              source={require('./imagenes/qr_sec.png')}
+            ></Card.Image>
+            <Card.Divider />
+            <Button onPress={handleLogout}>Cerrar Sesión</Button>
+          </Card>
+        </View>
+        <View style={{ height: 80 }}></View>
       </ScrollView>
-      <View style={styles.bottomBar}><BottomBar /></View>
+      <View>
+        <BottomBar />
+      </View>
     </View>
   );
 }
 
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#022534',
+  },
+  CenterContainer: {
+    flex: screenWidth * 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});

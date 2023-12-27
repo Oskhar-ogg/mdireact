@@ -1,15 +1,14 @@
 //SECTOR DE IMPORTS UTILIZADOS
 import React from 'react'
-import { View} from 'react-native'
-import styles from './style'
+import {View, StyleSheet} from 'react-native'
 import BottomBar from './componentes/bottombar'
-import { Button, Text, Card} from '@rneui/base'
+import { Button, Text, Card } from '@rneui/base'
 import Tarjeta from './componentes/tarjeta'
 import { AntDesign, FontAwesome } from '@expo/vector-icons'
 import { useNavigation } from '@react-navigation/native'
 //----------------------------------------------------------------------------------------
 //SECTOR VENTANA INICIO 
-export default function Inicio () {
+export default function Inicio () {  
     const navigation = useNavigation();
     const handleAgregarBitacoraPress = () => {
         navigation.navigate('Agregar Bitácora')
@@ -61,8 +60,46 @@ export default function Inicio () {
                 </Card>
                 <View style={{ height: 80 }}></View>
             </View>
-        <View style={styles.bottomBar}><BottomBar/></View>            
+        <View><BottomBar/></View>            
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#022534',
+    },
+    TopContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    BottomContainer: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    Cardinit: {
+        width: 300,
+        height: 400,
+        margin: 500,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 15,
+        borderColor: '#022534',
+        borderWidth: 50,
+      },
+    TextCard: {
+        marginBottom: 10,
+    },
+    buttonInit: {
+        marginBottom: 10,
+    },
+    imageContainer: {
+        flex: 0.9,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
 //----------------------------------------------------------------------------------------

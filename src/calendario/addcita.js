@@ -3,9 +3,8 @@ import { SafeAreaView, View, Button, TouchableOpacity, TextInput, ScrollView } f
 import { useNavigation } from '@react-navigation/native'
 import BottomBar from '../componentes/bottombar'
 import styles from '../style'
-import { Card, Text } from '@rneui/themed'
+import { Card, Text, CheckBox } from '@rneui/themed'
 import DateTimePickerAndroid from '@react-native-community/datetimepicker'
-import { Picker } from '@react-native-picker/picker'
 //CONEXIÓN A LA API 
 import { saveAgenda } from '../../api'
 
@@ -21,25 +20,18 @@ export default function AgregarCita (){
         agenda_fecha: new Date().toISOString().split('T')[0], // Formato yyyy-mm-dd
         tecnico_id: 1,
     })
-    const [picker, setPicker] = useState();
-
     const handleInputChange = (key, value) => {
-        if (key === 'agenda_comuna') {
-          // Si la clave es 'agenda_comuna', asigna directamente el valor seleccionado
-          setCitaData({ ...citaData, agenda_comuna: value });
-        } else {
-          // Para otras claves, asigna el valor normalmente
           setCitaData({ ...citaData, [key]: value })
         }
-      }
+      
       
 // IMPLEMENTACIÓN FUNCIONES DATETIMEPICKER DE ANDROID
     const handleDateConfirm = (event, selectedDate) => {
     if (selectedDate) {
-    const year = selectedDate.getFullYear();
-    const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
-    const day = String(selectedDate.getDate()).padStart(2, '0');
-    const formattedDate = `${day}-${month}-${year}`
+    const year = selectedDate.getFullYear()
+    const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
+    const day = String(selectedDate.getDate()).padStart(2, '0')
+    const formattedDate = `${year}-${month}-${day}`
     handleInputChange('agenda_fecha', formattedDate)
     }
     hideDatePicker()
@@ -47,8 +39,8 @@ export default function AgregarCita (){
     };
     const handleTimeConfirm = (event, selectedTime) => {
        if (selectedTime) {
-        const hours = String(selectedTime.getHours()).padStart(2, '0');
-        const minutes = String(selectedTime.getMinutes()).padStart(2, '0');
+        const hours = String(selectedTime.getHours()).padStart(2, '0')
+        const minutes = String(selectedTime.getMinutes()).padStart(2, '0')
         const formattedTime = `${hours}:${minutes}`
         handleInputChange('agenda_hora', formattedTime)
        }
@@ -85,12 +77,11 @@ export default function AgregarCita (){
      }
 
     return(
-        <SafeAreaView style={styles.container}>
+        <View style={styles.container}>
             <ScrollView>
             <View style={styles.CitaList} >
-            <Card>
-             <Card.Title h2>Reservación hora visita</Card.Title>
-             <Text h4>Nombre</Text>   
+            <Card style={styles.Card}>
+            <Text h4>Nombre del cliente</Text>   
             <TextInput
             style={styles.input}
             placeholder="Ej: Juan Pérez"
@@ -98,7 +89,7 @@ export default function AgregarCita (){
             onChangeText={(text) => handleInputChange('agenda_cliente', text)}
             /><Text style={{ color: 'red' }}>*Obligatorio</Text>
             <Card.Divider />
-            <Text h4>Dirección</Text>
+            <Text h4>Dirección de reunión</Text>
             <TextInput
             style={styles.input}
             placeholder="Ej: Collao 1202"
@@ -108,24 +99,45 @@ export default function AgregarCita (){
             <Text style={{ color: 'red' }}>*Obligatorio</Text>
             <Card.Divider />
             <Text h4>Comuna</Text>
-            <Picker
-            style={{ color: 'black', borderColor: 'gray', borderWidth: 0.2, bold: true }}
-            focus={true}
-            selectedValue={picker}
-            onValueChange={(itemValue, itemIndex) =>
-            handleInputChange('agenda_comuna', itemValue)
-            }>
-            <Picker.Item label="1 - Talcahuano" value="Talcahuano"/>
-            <Picker.Item label="2 - Concepción" value="Concepción"/>
-            <Picker.Item label="3 - Hualpén" value="Hualpén"/>
-            <Picker.Item label="4 - San Pedro de la paz" value="San pedro de la paz"/>
-            <Picker.Item label="5 - Penco" value="Penco"/>
-            <Picker.Item label="6 - Tomé" value="Tomé"/>
-            <Picker.Item label="7 - Chiguayante" value="Chiguayante"/>
-            </Picker>
+            <CheckBox
+              title="Talcahuano"
+              checked={citaData.agenda_comuna === 'Talcahuano'}
+              onPress={() => handleInputChange('agenda_comuna', 'Talcahuano')}
+            />
+            <CheckBox
+              title="Concepción"
+              checked={citaData.agenda_comuna === 'Concepción'}
+              onPress={() => handleInputChange('agenda_comuna', 'Concepción')}
+            />
+            <CheckBox
+              title="Hualpén"
+              checked={citaData.agenda_comuna === 'Hualpén'}
+              onPress={() => handleInputChange('agenda_comuna', 'Hualpén')}
+            />
+            <CheckBox
+              title="San pedro de la paz"
+              checked={citaData.agenda_comuna === 'San pedro de la paz'}
+              onPress={() => handleInputChange('agenda_comuna', 'San pedro de la paz')}
+            />
+
+            <CheckBox
+              title="Penco "
+              checked={citaData.agenda_comuna === 'Penco'}
+              onPress={() => handleInputChange('agenda_comuna', 'Penco')}
+            />
+            <CheckBox
+              title="Tomé"
+              checked={citaData.agenda_comuna=== 'Tomé'}
+              onPress={() => handleInputChange('agenda_comuna', 'Tomé')}
+            />
+            <CheckBox
+              title="Chiguayante"
+              checked={citaData.agenda_comuna === 'Chiguayante'}
+              onPress={() => handleInputChange('agenda_comuna', 'Chiguayante')}
+            />
             <Text style={{ color: 'red' }}>*Obligatorio</Text>
             <Card.Divider />
-            <Text h4 >Motivo</Text>
+            <Text h4 >Motivo de la cita</Text>
             <TextInput
             style={styles.input}
             placeholder="Ej: Instalación de calefont"
@@ -164,8 +176,8 @@ export default function AgregarCita (){
             </Card>
             </View>
             </ScrollView>
-            <View style={{ height: 80 }}></View>
+            <View style={{ height: 50 }}></View>
         <BottomBar styles = {styles.bottomBar}/>
-    </SafeAreaView>
+    </View>
    )   
 }

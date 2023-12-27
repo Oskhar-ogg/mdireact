@@ -56,6 +56,7 @@ export default function Login() {
               placeholder='ejemplo@aaaa.cl'
               autoCapitalize="none"
               autoComplete="email"
+              inputMode="email"
               textContentType="emailAddress"
               keyboardType="email-address"
               leftIcon={{ type: 'MaterialIcons', name: 'contact-mail' }}
@@ -69,6 +70,7 @@ export default function Login() {
               placeholder='*********'
               secureTextEntry={true}
               textContentType="password"
+              leftIcon={{ type: 'MaterialIcons', name: 'lock' }}  
             />
             </View>
             <Card.Divider />

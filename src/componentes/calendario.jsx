@@ -1,11 +1,12 @@
-import React, { useEffect, useState, PureComponent } from 'react';
-import { Alert, View, TouchableOpacity, Linking, Platform  } from 'react-native';
-import { Agenda, LocaleConfig } from 'react-native-calendars';
-import { Button, Card, Text } from '@rneui/themed';
+import React, { useEffect, useState, PureComponent } from 'react'
+import { Alert, View, TouchableOpacity, Linking, Platform  } from 'react-native'
+import { Agenda, LocaleConfig } from 'react-native-calendars'
+import { Button, Card, Text } from '@rneui/themed'
+import * as Notifications from 'expo-notifications'
 
 // CONEXIÓN API
-import { getAgenda, deleteAgenda } from '../../api';
-import styles from '../style';
+import { getAgenda, deleteAgenda } from '../../api'
+import styles from '../style'
 
 LocaleConfig.locales['es'] = {
   monthNames: [
@@ -27,9 +28,30 @@ LocaleConfig.locales['es'] = {
   dayNamesShort: ['Dom.', 'Lun.', 'Mar.', 'Mié.', 'Jue.', 'Vie.', 'Sáb.'],
   today: 'Hoy',
 };
-LocaleConfig.defaultLocale = 'es';
+LocaleConfig.defaultLocale = 'es'
 
 const Calendario = () => {
+
+  const triggerNotificacion = async () => {
+    try {
+      const trigger = {
+        hour: 9,
+        minute: 0,
+        repeats: true
+      };
+
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: 'Recordatorio',
+          body: 'Es hora de revisar tu agenda del día',
+        },
+        trigger,
+      });
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
   const handleDelete = async (agenda_id) => {
     Alert.alert('Eliminar Cita', '¿Estás seguro que deseas eliminar esta cita?', [
       {
@@ -40,13 +62,13 @@ const Calendario = () => {
         text: 'Eliminar',
         onPress: async () => {
           await deleteAgenda(agenda_id);
-          console.log('Cita eliminada correctamente');
+          console.log('Cita eliminada correctamente')
         },
       },
-    ]);
-  };
+    ])
+  }
 
-  const [items, setItems] = useState({});
+  const [items, setItems] = useState({})
 
   const handleMapsPress = async (direccion, comuna) => {
     if (direccion && comuna) {
@@ -88,16 +110,16 @@ const Calendario = () => {
 
   const cargarItems = async () => {
     try {
-      const agendas = await getAgenda(); // Obtiene los datos de la agenda desde tu API
+      const agendas = await getAgenda(); // Obtener las citas desde la API
 
       const formattedItems = {};
 
       agendas.forEach((agenda) => {
-        const date = agenda.agenda_fecha;
-        const dateString = new Date(date).toISOString().split('T')[0];
+        const date = agenda.agenda_fecha
+        const dateString = new Date(date).toISOString().split('T')[0]
 
         if (!formattedItems[dateString]) {
-          formattedItems[dateString] = [];
+          formattedItems[dateString] = []
         }
 
         formattedItems[dateString].push({
@@ -111,15 +133,15 @@ const Calendario = () => {
         });
       });
 
-      setItems(formattedItems);
+      setItems(formattedItems)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
   };
 
   useEffect(() => {
     cargarItems();
-    console.log('Citas cargadas correctamente');
+    triggerNotificacion(items);
   }, []);
 
   class Reservation extends PureComponent {
@@ -135,7 +157,7 @@ const Calendario = () => {
       } = item;
       return (
         <TouchableOpacity style={styles.AgendaList}>
-          <Card>
+          <Card style={styles.Card}>
             <View
               style={{
                 flexDirection: 'column',
@@ -209,8 +231,8 @@ const Calendario = () => {
           <Text h3>Aun no tienes una cita agendada para este día</Text>
         </Card>
       </View>
-    );
-  };
+    )
+  }
 
   return (
     <View style={{ flex: 1 }}>
@@ -227,8 +249,9 @@ const Calendario = () => {
           agendaKnobColor: 'blue',
         }}
       />
+    <View style={{ height: 50 }}></View>
     </View>
-  );
-};
+  )
+}
 
-export default Calendario;
+export default Calendario

@@ -1,8 +1,10 @@
-const API = process.env.EXPO_PUBLIC_API_URL
+//const API = process.env.EXPO_PUBLIC_API_URL
+const API = 'http://192.168.1.93:3001'
 
+//SECTOR TARJETA
 export const MontoMesBitacora = async () => {
   try {
-      const res = await fetch(`${API}/mes`);
+      const res = await fetch(`${API}/tarjeta/montoMes`);
       if (!res.ok) {
           throw new Error(`Error al obtener el monto del mes: ${res.statusText}`);
       }
@@ -19,14 +21,26 @@ export const MontoMesBitacora = async () => {
 
 export const MontoBitacora = async () => {
   try {
-    const res = await fetch(`${API}/total`); // Cambio en la URL
+    const res = await fetch(`${API}/tarjeta/montoTotal`); // Cambio en la URL
     return await res.json();
   } catch (error) {
     console.error(error);
     throw new Error('Failed to fetch total bitacora amount'); // Actualiza el mensaje de error
   }
 };
-
+//
+// SECTOR TÉCNICO
+export const getTecnico = async () => {
+  try {
+    const res = await fetch(`${API}/tecnico`);
+     return await res.json();
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to fetch tecnico');
+  }
+};
+//
+//SECTOR BITÁCORA
 
 export const getBitacora = async () => {
     try {
@@ -37,6 +51,18 @@ export const getBitacora = async () => {
       throw new Error('Failed to fetch bitacora');
     }
   };
+
+export const getBitacoraID = async (bitacora_id) => {
+    try {
+      const res = await fetch(`${API}/bitacora/${bitacora_id}`);
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to fetch bitacora with id: ${bitacora_id}`);
+    }
+  }
+
+
 
   export const saveBitacora = async (bitacoraData) => {
     try {
@@ -64,6 +90,8 @@ export const getBitacora = async () => {
       throw new Error(`Failed to delete bitacora with id: ${bitacora_id}`);
     }
   };
+
+  //SECTOR CALENDARIO
 
   export const getAgenda = async () => {
     try {
@@ -111,6 +139,92 @@ export const getBitacora = async () => {
       throw new Error(`Failed to delete agenda with id: ${agenda_id}`);
     }
   };
+ // SECTOR INVENTARIO
+
+  export const getInventarioCaldera = async () => {
+    try {
+      const res = await fetch(`${API}/inv_caldera`);
+      return await res.json();
+    }
+    catch (error) {
+      console.error(error);
+      throw new Error('Failed to fetch inventario caldera');
+    }
+  };
+
+  export const saveInventarioCaldera = async (inventarioCalderaData) => {
+    try {
+      const res = await fetch(`${API}/inv_caldera`, {
+        method: 'POST',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(inventarioCalderaData),
+      });
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to save inventario caldera');
+    }
+  }
+
+  export const updateInventarioCaldera = async (inv_cal_id, inv_cal_cantidad) => {
+    try {
+      const res = await fetch(`${API}/inv_caldera/${inv_cal_id}`, {
+        method: 'PUT',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inv_cal_cantidad }),
+      });
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to update inventario caldera');
+    }
+  }
+
+  export const getInventarioCalefont = async () => {
+    try {
+      const res = await fetch(`${API}/inv_calefont`);
+      return await res.json();
+    }
+    catch (error) {
+      console.error(error);
+      throw new Error('Failed to fetch inventario caldera');
+    }
+  };
+
+  export const getInventarioEquipo = async () => {
+    try {
+      const res = await fetch(`${API}/inv_equipo`);
+      return await res.json();
+    }
+    catch (error) {
+      console.error(error);
+      throw new Error('Failed to fetch inventario caldera');
+    }
+  };
+
+  export const getInventarioRedagua = async () => {
+    try {
+      const res = await fetch(`${API}/inv_redagua`);
+      return await res.json();
+    }
+    catch (error) {
+      console.error(error);
+      throw new Error('Failed to fetch inventario caldera');
+    }
+  };
+
+  export const getInventarioRedgas= async () => {
+    try {
+      const res = await fetch(`${API}/inv_redgas`);
+      return await res.json();
+    }
+    catch (error) {
+      console.error(error);
+      throw new Error('Failed to fetch inventario caldera');
+    }
+  };
+
+
 
   export const getClienteHistoricoCaldera = async (cliente_id) => {
     try {

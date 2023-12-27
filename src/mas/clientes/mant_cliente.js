@@ -6,6 +6,7 @@ import styles from "../../style"
 export default function HistoricoCliente (){
 
     return(<View style={styles.container}>
-        <View style={styles.bottomBar}><BottomBar/></View> 
+        <View style={styles.bottomBar}></View>
+        <BottomBar/>
         </View>)
 }

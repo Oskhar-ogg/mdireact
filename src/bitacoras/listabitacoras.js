@@ -6,8 +6,10 @@ import styles from "../style"
 import { Card, Text, Button } from "@rneui/base"
 import { useIsFocused } from "@react-navigation/native"
 import BottomBar from "../componentes/bottombar"
+import { useNavigation } from "@react-navigation/native"
+
 //CONEXIÓN A LA API
-import { getBitacora, deleteBitacora } from "../../api"
+import { getBitacora} from "../../api"
 
 
 
@@ -16,7 +18,7 @@ export default function ListaBitacoras (){
     const [refreshing, setRefreshing] = React.useState(false)
     const [listabitacora, setListabitacora] = useState([])
     const isFocused = useIsFocused()
-
+    const navigation = useNavigation();
     const cargarBitacora = async () => {
         try {
           const data = await getBitacora();
@@ -32,23 +34,10 @@ export default function ListaBitacoras (){
         await cargarBitacora();
         setRefreshing(false);
       }, []);
-    
-      const handleDelete = async (bitacora_id) => {
-        Alert.alert("Eliminar bitácora", "¿Estás seguro que deseas eliminar esta bitácora?", [
-          {
-            text: "Cancelar",
-            onPress: () => console.log("Cancel Pressed"),
-          },
-          {
-            text: "Eliminar",
-            onPress: async () => {
-              await deleteBitacora(bitacora_id);
-              console.log('Bitacora eliminada correctamente');
-              await cargarBitacora();
-          },
-          },
-        ])
-    };
+
+      const handleVerbitacora = (bitacora_id) => {
+        navigation.navigate('Ver bitácora', { bitacora_id });
+      };
       
       useEffect(() => {
         cargarBitacora();
@@ -79,18 +68,16 @@ export default function ListaBitacoras (){
                 <Card.Title h4>{new Date(item.bitacora_fecha).toLocaleDateString()}</Card.Title>
                 <Text h3 style={{ color: getColor(item.bitacora_estado) }}>{item.bitacora_estado}</Text>
                 <Card.Divider />
-                <Text h4 style={{ color: '#000000', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', fontSize: 16 }}>{item.bitacora_description}</Text>
-                <Card.Divider />
                 <Text h4 style={{ color: '#000000', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', fontSize: 16 }}>${item.bitacora_valor_cobrado}</Text>
                 <View style={{ justifyContent: 'center', alignItems: 'center' }}>
-                  <Button
-                    title="Eliminar bitácora"
-                    icon={{ name: 'trash', type: 'font-awesome', size: 15, color: 'white' }}
+                <Button
+                    title="Ver mas detalles"
+                    icon={{ name: 'eye', type: 'font-awesome', size: 15, color: 'white' }}
                     iconCenter
                     iconContainerStyle={{ marginLeft: 5 }}
                     titleStyle={{ fontWeight: '700' }}
                     buttonStyle={{
-                      backgroundColor: 'rgba(199, 43, 98, 1)',
+                      backgroundColor: 'rgba(128, 128, 196, 1)',
                       borderColor: 'transparent',
                       borderWidth: 2,
                       borderRadius: 50,
@@ -100,7 +87,7 @@ export default function ListaBitacoras (){
                       marginHorizontal: 50,
                       marginVertical: 10,
                     }}
-                    onPress={() => handleDelete(item.bitacora_id)} // Corregir el argumento de la función handleDelete
+                    onPress={() => handleVerbitacora(item.bitacora_id)}
                   />
                 </View>
               </Card>

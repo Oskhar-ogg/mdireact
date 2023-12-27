@@ -1,30 +1,128 @@
-import React, { useState, useEffect } from "react"
-import { ScrollView, SafeAreaView, View, Button, TouchableOpacity, TextInput, Switch } from "react-native"
-import { useNavigation } from "@react-navigation/native"
-import { AntDesign } from "@expo/vector-icons"
-import { Card, Text, CheckBox } from "@rneui/base"
-import DateTimePickerAndroid from '@react-native-community/datetimepicker'
-import BottomBar from "../componentes/bottombar"
-import * as ImagePicker from 'expo-image-picker'
-import { Video } from 'expo-av'
-
-
-import styles from "../style"
+import React, { useState, useEffect } from "react";
+import { ScrollView, SafeAreaView, View, Button, TouchableOpacity, TextInput, Switch, Image, Alert } from "react-native";
+import { useNavigation } from "@react-navigation/native";
+import { AntDesign } from "@expo/vector-icons";
+import { Card, Text, CheckBox } from "@rneui/base";
+import DateTimePickerAndroid from '@react-native-community/datetimepicker';
+import BottomBar from "../componentes/bottombar";
+import * as ImagePicker from 'expo-image-picker';
+import styles from "../style";
+import axios from 'axios';
 //CONEXIÓN DE LA API
-import { saveBitacora } from "../../api"
+import { saveBitacora } from "../../api";
+
+const SubirImagen = ({ onImageUpload }) => {
+  const [imagenes, setImagenes] = useState([]);
+
+  const guardarImagen = async (imagen) => {
+    try {
+      const formData = new FormData();
+      formData.append('file', {
+        uri: imagen,
+        type: 'image/jpeg',
+        name: 'filename.jpg',
+      });
+
+      const response = await axios.post('http://192.168.1.93:3001/subir/bitacora', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+
+      const data = response.data;
+      return data.url;
+    } catch (error) {
+      console.error('Error in guardarImagen:', error);
+
+      if (axios.isAxiosError(error)) {
+        if (!error.response) {
+          console.error('Network Error - No response received');
+        } else {
+          console.error('Request failed with status:', error.response.status);
+        }
+      } else {
+        console.error('Non-Axios error:', error.message);
+      }
+
+      throw error;
+    }
+  };
+
+  const seleccionarImagenes = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      console.log('Permiso denegado para acceder a la biblioteca de medios');
+      return;
+    }
+
+    const result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+      maxNumberOfFiles: 10 - imagenes.length, // Limitar a un máximo de 10 fotos
+    });
+
+    if (!result.canceled && result.assets && result.assets.length > 0) {
+      const url = await guardarImagen(result.assets[0].uri);
+      onImageUpload(url);
+      setImagenes([...imagenes, url]);
+    }
+  };
+
+  const eliminarImagen = (index) => {
+    Alert.alert(
+      'Eliminar imagen',
+      '¿Estás seguro de que quieres eliminar la imagen seleccionada?',
+      [
+        {
+          text: 'Cancelar',
+          onPress: () => console.log('Cancelado'),
+          style: 'cancel',
+        },
+        {
+          text: 'Eliminar',
+          onPress: () => {
+            const nuevasImagenes = imagenes.filter((_, i) => i !== index);
+            setImagenes(nuevasImagenes);
+          },
+          style: 'destructive',
+        },
+      ],
+    );
+  };
+
+  return (
+    <View>
+      <Text h4>Subir imágenes</Text>
+      <Text style={{ color: 'red' }}>*Máximo 10 fotos</Text>
+      <ScrollView horizontal>
+        {imagenes.map((imagen, index) => (
+          <TouchableOpacity onPress={() => eliminarImagen(index)} key={index}>
+            <View>
+              <Image source={{ uri: imagen }} style={{ width: 200, height: 200 }} />
+            </View>
+          </TouchableOpacity>
+        ))}
+      </ScrollView>
+      <TouchableOpacity onPress={seleccionarImagenes}>
+        <AntDesign name="camera" size={55} color="black" />
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 export default function AgregarBitacora() {
 
-  const [isSwitchOn, setIsSwitchOn] = useState(false)
-  const [selectedMedia, setSelectedMedia] = useState([])
-  const [isDatePickerVisible, setDatePickerVisible] = useState(false)
+  const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
 
-  const toggleSwitch = () => setIsSwitchOn(!isSwitchOn)
+  const toggleSwitch = () => setIsSwitchOn(!isSwitchOn);
 
-  const navigation = useNavigation()
+  const navigation = useNavigation();
   const handleBitacoraPress = () => {
-    navigation.navigate('Bitácoras')
-  }
+    navigation.navigate('Bitácoras');
+  };
 
   const [bitacoraData, setBitacoraData] = useState({
     bitacora_title: '',
@@ -32,110 +130,68 @@ export default function AgregarBitacora() {
     bitacora_trabajo: '',
     bitacora_estado: '',
     bitacora_valor_cobrado: '0',
-    bitacora_fecha: new Date().toISOString().split('T')[0], // Formato yyyy-mm-dd
+    bitacora_fecha: new Date().toLocaleDateString(), // Formato yyyy-mm-dd
     tecnico_id: 1,
+    bitacora_imageURL: '',
   });
 
   const handleInputChange = (key, value) => {
-    setBitacoraData({ ...bitacoraData, [key]: value })
+    setBitacoraData({ ...bitacoraData, [key]: value });
   };
 
-  const handleAgregarBitacora = () => {
+  const handleImageUpload = (imageUrl) => {
+    setBitacoraData({ ...bitacoraData, bitacora_imageURL: imageUrl });
+  };
+
+  const handleAgregarBitacora = async () => {
     if (
       !bitacoraData.bitacora_title ||
       !bitacoraData.bitacora_description ||
       !bitacoraData.bitacora_trabajo ||
       !bitacoraData.bitacora_estado
     ) {
-      // Mostrar un mensaje de error o alerta
-      alert('Por favor, completa todos los campos obligatorios.')
-      return
+      alert('Por favor, completa todos los campos obligatorios.');
+      return;
     }
-    const data = {
-      ...bitacoraData,
-      media: selectedMedia, // Cambié el nombre de 'images' a 'media' para abarcar tanto imágenes como videos
-    }
-    console.log(data)
     try {
-      saveBitacora(data)
-      handleBitacoraPress()
-      // Lógica adicional después de agregar la bitácora (por ejemplo, actualizar la lista de bitácoras)
+      const response = await saveBitacora(bitacoraData);
+      if (response.error) {
+        console.error(response.error);
+        alert('Error al guardar la bitácora. Por favor, inténtalo de nuevo.');
+      } else {
+        alert('Bitácora guardada exitosamente.');
+        handleBitacoraPress();
+      }
     } catch (error) {
-      console.log(error)
+      console.error(error);
+      alert('Error al guardar la bitácora. Por favor, inténtalo de nuevo.');
     }
-  }
+  };
 
   const showDatePicker = () => {
-    setDatePickerVisible(true)
-  }
+    setDatePickerVisible(true);
+  };
 
   const hideDatePicker = () => {
-    setDatePickerVisible(false)
-  }
+    setDatePickerVisible(false);
+  };
 
   const handleDateConfirm = (event, selectedDate) => {
     if (selectedDate) {
-      const year = selectedDate.getFullYear()
-      const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
-      const day = String(selectedDate.getDate()).padStart(2, '0')
-      const formattedDate = `${day}-${month}-${year}`
-      handleInputChange('bitacora_fecha', formattedDate)
+      const year = selectedDate.getFullYear();
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
+      const day = String(selectedDate.getDate()).padStart(2, '0');
+      const formattedDate = `${day}/${month}/${year}`;
+      handleInputChange('bitacora_fecha', formattedDate);
     }
-    hideDatePicker()
+    hideDatePicker();
   };
-
-  const handleSelectImages = async () => {
-    try {
-      const result = await ImagePicker.launchCameraAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.Images,
-        allowsEditing: false,
-        aspect: [4, 3],
-        quality: 1,
-      });
-
-      if (!result.canceled) {
-        const newMedia = [...selectedMedia, { uri: result.uri, type: 'image' }]
-        setSelectedMedia(newMedia)
-      }
-    } catch (error) {
-      console.log("Error al seleccionar imágenes:", error)
-    }
-  }
-
-  const handleSelectMedia = async () => {
-    try {
-      const result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All, // Permite seleccionar tanto imágenes como videos
-        allowsEditing: false,
-        aspect: [4, 3],
-        quality: 1,
-      })
-
-      if (!result.canceled) {
-        const newMedia = [...selectedMedia, { uri: result.uri, type: 'image' }]
-        setSelectedMedia(newMedia)
-      }
-    } catch (error) {
-      console.log("Error al seleccionar media:", error)
-    }
-  }
-
-  // Asegúrate de solicitar los permisos al cargar la pantalla
-  useEffect(() => {
-    (async () => {
-      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-      if (status !== "granted") {
-        alert("Se necesita permiso para acceder a la galería de imágenes.")
-      }
-    })()
-  }, [])
 
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.addList}>
         <Card style={styles.Card}>
-          <Card.Title h3>REGISTRO DE TRABAJO</Card.Title>
-          <Card.Divider />
+
           <Text h4>Título de trabajo</Text>
           <TextInput
             style={styles.input}
@@ -154,6 +210,11 @@ export default function AgregarBitacora() {
           <Card.Divider />
           <View>
             <Text h4>Selecciona un trabajo:</Text>
+            <CheckBox
+              title="Visita de inspección"
+              checked={bitacoraData.bitacora_trabajo === 'Visita de inspección'}
+              onPress={() => handleInputChange('bitacora_trabajo', 'Visita de inspección')}
+            />
             <CheckBox
               title="Mantenimiento"
               checked={bitacoraData.bitacora_trabajo === 'Mantenimiento'}
@@ -192,31 +253,7 @@ export default function AgregarBitacora() {
             <Text style={{ color: 'red' }}>*Obligatorio</Text>
           </View>
           <Card.Divider />
-          <View>
-          <Text h4>Subir imagen o Video:</Text>
-            <TouchableOpacity onPress={handleSelectImages}>
-              <AntDesign name="camera" size={55} color="black" />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleSelectMedia}>
-              <AntDesign name="picture" size={55} color="black" />
-            </TouchableOpacity>
-            <ScrollView horizontal>
-              {selectedMedia.map((media, index) => (
-                <View key={index} style={{ marginRight: 10 }}>
-                  {media.type.startsWith("image/") ? (
-                    <Image source={{ uri: media.uri }} style={{ width: 100, height: 100 }} />
-                  ) : (
-                    <Video
-                      source={{ uri: media.uri }}
-                      style={{ width: 100, height: 100 }}
-                      useNativeControls
-                      resizeMode="contain"
-                    />
-                  )}
-                </View>
-              ))}
-            </ScrollView>
-          </View>
+          <SubirImagen onImageUpload={handleImageUpload} />
           <Card.Divider />
           <View>
             <Text h4>¿Hubo remuneración?</Text>
@@ -228,6 +265,7 @@ export default function AgregarBitacora() {
               <TextInput
                 style={styles.input}
                 placeholder="$0"
+                keyboardType="numeric"
                 value={bitacoraData.bitacora_valor_cobrado}
                 onChangeText={(text) => handleInputChange('bitacora_valor_cobrado', text)}
               />)}
@@ -248,8 +286,8 @@ export default function AgregarBitacora() {
           <Card.Divider />
           <Button title="Agregar registro" onPress={handleAgregarBitacora} />
         </Card>
-        <View style={{ height: 80 }}></View>
       </ScrollView>
+      <View style={{ height: 50 }}></View>
       <BottomBar />
     </SafeAreaView>
   );

@@ -8,27 +8,27 @@ import styles from '../style';
 import {Text} from '@rneui/themed';
 
 const BottomBar = () =>{
-    const navigation = useNavigation();
+    const navigation = useNavigation()
 
     const handleInicioPress = () => {
-    navigation.navigate('Inicio');
-    };
+    navigation.navigate('Inicio')
+    }
 
     const handleInventarioPress = () => {
-    navigation.navigate('Inventario');
-    };
+    navigation.navigate('Inventario')
+    }
 
     const handleAgendaPress = () => {
-    navigation.navigate('Agenda');
-    };
+    navigation.navigate('Agenda')
+    }
 
     const handleMasPress = () => {
-    navigation.navigate('Más');
-    };
+    navigation.navigate('Más')
+    }
 
     const handleBitacoraPress = () => {
-    navigation.navigate('Bitácoras');
-    };
+    navigation.navigate('Bitácoras')
+    }
     return( 
     <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.button} onPress={handleInicioPress}>
@@ -56,4 +56,4 @@ const BottomBar = () =>{
     )
 }
 
-export default BottomBar;
+export default BottomBar

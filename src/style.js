@@ -143,6 +143,13 @@ const styles = {
         alignItems: 'center',
       },
 
+      Inventario: {
+        flex: screenWidth * 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'white',
+      },
+
     Card: {
         width: screenWidth * 1,
         padding: 20,
