@@ -49,12 +49,21 @@ const Verbitacora = ({ route }) => {
     keyExtractor={(item) => item.bitacora_id.toString()}
     renderItem={({item}) =>( 
     <Card>
-        <Card.Title title={new Date(item.bitacora_fecha).toLocaleDateString()} subtitle={item.bitacora_trabajo} left={LeftContent} />
+        <Card.Title title={new Date(item.bitacora_fecha).toLocaleDateString()} subtitle={item.bitacora_trabajo + ' || ' + item.bitacora_estado} left={LeftContent} />
+        <Card.Title title = {item.bitacora_title} />
         <Card.Content>
-          <Text variant="titleLarge">{item.bitacora_title}</Text>
-          <Text variant="bodyMedium">{item.bitacora_description}</Text>
+          <Text variant="bodyMedium" style={{ fontSize: 22 }}>{item.bitacora_description}</Text>
         </Card.Content>
-        <Card.Cover source={{ uri: 'http://localhost:3001/images/404' }} />
+        <Card.Cover
+  style={{
+    width: 375,
+    height: 375,
+    resizeMode: 'contain',
+    alignSelf: 'center',
+    marginVertical: 10
+  }}
+  source={require('../imagenes/ImagenNoDisponible.png')} />
+
         <Card.Actions>
           <Button mode='contained' textColor='white' theme={{ colors: { primary: 'red' } }} onPress={() => handleDelete(item.bitacora_id)}>Eliminar</Button>
         </Card.Actions>

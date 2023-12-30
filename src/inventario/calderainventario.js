@@ -4,7 +4,7 @@ import BottomBar from '../componentes/bottombar';
 import styles from '../style';
 import { DataTable, Card, Button, Portal, Modal, Provider, Text, DefaultTheme } from 'react-native-paper';
 import { CheckBox } from '@rneui/base';
-import { getInventarioCaldera, saveInventarioCaldera, deleteInventarioCaldera } from '../../api';
+import { getInventarioCaldera, saveInventarioCaldera, deleteInventarioCaldera, updateInventarioCaldera } from '../../api';
 
 const CalderaInventario = () => {
   const [page, setPage] = React.useState(0);
@@ -42,22 +42,28 @@ const CalderaInventario = () => {
 
   const handleEditarRepuesto = async () => {
     try {
-      // Solo permitir modificar la cantidad
-      const { inv_cal_cantidad, inv_cal_id } = inventarioData;
-      const response = await saveInventarioCaldera({ inv_cal_cantidad, inv_cal_id });
+      const { inv_cal_cantidad } = inventarioData;
+      
+      // Extract inv_cal_id from selectedItem
+      const { inv_cal_id } = selectedItem;
+  
+      const response = await updateInventarioCaldera({ inv_cal_cantidad, inv_cal_id });
       console.log(response);
+  
       setInventarioData({
         inv_cal_tipo_repuesto: '',
         inv_cal_marca_repuesto: '',
         inv_cal_ubicacion: '',
         inv_cal_cantidad: '',
       });
+      
       setVisibleEditarModal(false);
       fetchData(); // Refrescar los datos después de editar un repuesto
     } catch (error) {
       console.error(error);
     }
   };
+  
 
   const incrementarCantidadEditar = () => {
     setInventarioData((prevData) => ({
@@ -90,7 +96,14 @@ const CalderaInventario = () => {
   };
 
   const showAgregarModal = () => setVisibleAgregarModal(true);
-  const hideAgregarModal = () => setVisibleAgregarModal(false);
+  const hideAgregarModal = () => {setVisibleAgregarModal(false);
+    setInventarioData({
+      inv_calefont_tipo_repuesto: '',
+      inv_calefont_marca_repuesto: '',
+      inv_calefont_ubicacion: '',
+      inv_calefont_cantidad: '',
+    });
+    };
 
   const showEditarModal = (item) => {
     setSelectedItem(item);
@@ -104,7 +117,14 @@ const CalderaInventario = () => {
     setVisibleEditarModal(true);
   };
 
-  const hideEditarModal = () => setVisibleEditarModal(false);
+  const hideEditarModal = () => { setVisibleEditarModal(false)
+    setInventarioData({
+      inv_calefont_tipo_repuesto: '',
+      inv_calefont_marca_repuesto: '',
+      inv_calefont_ubicacion: '',
+      inv_calefont_cantidad: '',
+    });
+    };
 
   React.useEffect(() => {
     fetchData();
@@ -256,9 +276,10 @@ const CalderaInventario = () => {
                 keyboardType="numeric"
                 maxLength={4}
                 placeholder="Ej: 9999"
-                value={inventarioData.inv_cal_cantidad}
-                onChangeText={(numeric) => handleInputChange('inv_cal_cantidad', numeric)}
+                value={String(inventarioData.inv_cal_cantidad)}  // Convierte el número a cadena
+                onChangeText={(text) => handleInputChange('inv_cal_cantidad', text)}
               />
+
               <Text style={{ color: 'red' }}>*Obligatorio</Text>
             </Card.Content>
             <Card.Actions>

@@ -1,5 +1,5 @@
-//const API = process.env.EXPO_PUBLIC_API_URL
-const API = 'http://192.168.1.93:3001'
+const API = process.env.EXPO_PUBLIC_API_URL
+//const API = 'http://192.168.1.93:3001'
 
 //SECTOR TARJETA
 export const MontoMesBitacora = async () => {
@@ -166,19 +166,21 @@ export const getBitacoraID = async (bitacora_id) => {
     }
   }
 
-  export const updateInventarioCaldera = async (inv_cal_id, inv_cal_cantidad) => {
-    try {
-      const res = await fetch(`${API}/inv_caldera/${inv_cal_id}`, {
-        method: 'PUT',
-        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ inv_cal_cantidad }),
-      });
-      return await res.json();
-    } catch (error) {
-      console.error(error);
-      throw new Error('Failed to update inventario caldera');
-    }
+export const updateInventarioCaldera = async (inv_cal_id, inv_cal_cantidad) => {
+  try {
+    const response = await fetch(`${API}/inv_caldera/${inv_cal_id}`, {
+      method: 'PATCH',
+      headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ inv_cal_cantidad }),
+    });
+    
+    return await response.json();
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to update inventario caldera');
   }
+};
+
 
   export const getInventarioCalefont = async () => {
     try {
@@ -190,6 +192,49 @@ export const getBitacoraID = async (bitacora_id) => {
       throw new Error('Failed to fetch inventario caldera');
     }
   };
+
+  export const saveInventarioCalefont = async (inventarioCalefontData) => {
+    try {
+      const res = await fetch(`${API}/inv_calefont`, {
+        method: 'POST',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(inventarioCalefontData),
+      });
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to save inventario calefont');
+    }
+  }
+
+  export const updateInventarioCalefont = async (inv_calf_id, inv_calf_cantidad) => {
+    try {
+      const response = await fetch(`${API}/inv_calefont/${inv_calf_id}`, {
+        method: 'PATCH',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inv_calf_cantidad }),
+      });
+      
+      return await response.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to update inventario calefont');
+    }
+  }
+
+  export const deleteInventarioCalefont = async (inv_calf_id) => {
+    try {
+      console.log('Eliminar inventario calefont con id:', inv_calf_id);
+      const res = await fetch(`${API}/inv_calefont/${inv_calf_id}`, {
+        method: 'DELETE',
+      });
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to delete inventario calefont with id: ${inv_calf_id}`);
+    }
+  }
+
 
   export const getInventarioEquipo = async () => {
     try {

@@ -132,7 +132,6 @@ export default function AgregarBitacora() {
     bitacora_valor_cobrado: '0',
     bitacora_fecha: new Date().toLocaleDateString(), // Formato yyyy-mm-dd
     tecnico_id: 1,
-    bitacora_imageURL: '',
   });
 
   const handleInputChange = (key, value) => {
@@ -237,9 +236,9 @@ export default function AgregarBitacora() {
             />
             <Text style={{ color: 'red' }}>*Obligatorio</Text>
           </View>
-          <Card.Divider />
-          <View>
+          <Card.Divider />  
             <Text h4>Selecciona un estado:</Text>
+            <ScrollView horizontal>
             <CheckBox
               title="Vigente"
               checked={bitacoraData.bitacora_estado === 'Vigente'}
@@ -250,10 +249,8 @@ export default function AgregarBitacora() {
               checked={bitacoraData.bitacora_estado === 'Finalizado'}
               onPress={() => handleInputChange('bitacora_estado', 'Finalizado')}
             />
+            </ScrollView>
             <Text style={{ color: 'red' }}>*Obligatorio</Text>
-          </View>
-          <Card.Divider />
-          <SubirImagen onImageUpload={handleImageUpload} />
           <Card.Divider />
           <View>
             <Text h4>¿Hubo remuneración?</Text>

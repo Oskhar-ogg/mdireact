@@ -30,8 +30,8 @@ export default function Perfil() {
 
   const cargarTecnico = async () => {
     try {
-      const tecnicoData = await getTecnico();
-      console.log('Datos del técnico:', tecnicoData); // Agrega esta línea
+      const [tecnicoData] = await getTecnico(); // Desestructura el array
+      console.log('Datos del técnico:', tecnicoData);
       setTecnico({
         tecnico_nombre: tecnicoData.tecnico_nombre,
         tecnico_correo: tecnicoData.tecnico_correo,
@@ -41,6 +41,7 @@ export default function Perfil() {
       console.error('Error al cargar el técnico:', error);
     }
   };
+  
   
 
   useEffect(() => {
@@ -60,11 +61,11 @@ export default function Perfil() {
               rounded
             />
             <Card.Divider />
-            <Text h4>Nombre: Walter Caro</Text>
+            <Text h4>Nombre: {tecnico.tecnico_nombre}</Text>
             <Card.Divider />
-            <Text h4>Correo: mdibiobio2015@gmail.com</Text>
+            <Text h4>Correo: {tecnico.tecnico_correo}</Text>
             <Card.Divider />
-            <Text h4>Teléfono: +56967130030</Text>
+            <Text h4>Teléfono: {tecnico.tecnico_telefono}</Text>
             <Card.Divider />
             <Text h4>e-RNI QR SEC: </Text>
             <Card.Image

@@ -222,6 +222,7 @@ const styles = {
       padding: 5,
       margin: 10,
       },
+      
       LoginContainer: {
         flex: screenWidth * 1,
         justifyContent: 'center',
