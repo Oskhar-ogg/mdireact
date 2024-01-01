@@ -43,8 +43,6 @@ const CalderaInventario = () => {
   const handleEditarRepuesto = async () => {
     try {
       const { inv_cal_cantidad } = inventarioData;
-      
-      // Extract inv_cal_id from selectedItem
       const { inv_cal_id } = selectedItem;
   
       const response = await updateInventarioCaldera({ inv_cal_cantidad, inv_cal_id });

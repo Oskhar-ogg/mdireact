@@ -1,5 +1,5 @@
-const API = process.env.EXPO_PUBLIC_API_URL
-//const API = 'http://192.168.1.93:3001'
+//const API = process.env.EXPO_PUBLIC_API_URL
+const API = 'http://192.168.1.93:3001'
 
 //SECTOR TARJETA
 export const MontoMesBitacora = async () => {
@@ -247,6 +247,48 @@ export const updateInventarioCaldera = async (inv_cal_id, inv_cal_cantidad) => {
     }
   };
 
+  export const saveInventarioEquipo = async (inventarioEquipoData) => {
+    try {
+      const res = await fetch(`${API}/inv_equipo`, {
+        method: 'POST',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(inventarioEquipoData),
+      });
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to save inventario equipo');
+    }
+  }
+
+  export const updateInventarioEquipo = async (inv_equ_id, inv_equ_cantidad) => {
+    try {
+      const response = await fetch(`${API}/inv_equipo/${inv_equ_id}`, {
+        method: 'PATCH',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inv_equ_cantidad }),
+      });
+      
+      return await response.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to update inventario equipo');
+    }
+  }
+
+  export const deleteInventarioEquipo = async (inv_equ_id) => {
+    try {
+      console.log('Eliminar inventario equipo con id:', inv_equ_id);
+      const res = await fetch(`${API}/inv_equipo/${inv_equ_id}`, {
+        method: 'DELETE',
+      });
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to delete inventario equipo with id: ${inv_equ_id}`);
+    }
+  }
+
   export const getInventarioRedagua = async () => {
     try {
       const res = await fetch(`${API}/inv_redagua`);
@@ -257,6 +299,48 @@ export const updateInventarioCaldera = async (inv_cal_id, inv_cal_cantidad) => {
       throw new Error('Failed to fetch inventario caldera');
     }
   };
+
+  export const saveInventarioRedagua = async (inventarioRedaguaData) => {
+    try {
+      const res = await fetch(`${API}/inv_redagua`, {
+        method: 'POST',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(inventarioRedaguaData),
+      });
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to save inventario redagua');
+    }
+  }
+
+  export const updateInventarioRedagua = async (inv_red_agua_id, inv_red_agua_cantidad) => {
+    try {
+      const response = await fetch(`${API}/inv_redagua/${inv_red_agua_id}`, {
+        method: 'PATCH',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inv_red_agua_id, inv_red_agua_cantidad }),
+      });
+      
+      return await response.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to update inventario redagua');
+    }
+  }
+
+  export const deleteInventarioRedagua = async (inv_red_id) => {
+    try {
+      console.log('Eliminar inventario redagua con id:', inv_red_id);
+      const res = await fetch(`${API}/inv_redagua/${inv_red_id}`, {
+        method: 'DELETE',
+      });
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to delete inventario redagua with id: ${inv_red_id}`);
+    }
+  }
 
   export const getInventarioRedgas= async () => {
     try {
@@ -269,7 +353,47 @@ export const updateInventarioCaldera = async (inv_cal_id, inv_cal_cantidad) => {
     }
   };
 
+  export const saveInventarioRedgas = async (inventarioRedgasData) => {
+    try {
+      const res = await fetch(`${API}/inv_redgas`, {
+        method: 'POST',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(inventarioRedgasData),
+      });
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to save inventario redgas');
+    }
+  }
 
+  export const updateInventarioRedgas = async (inv_gas_id, inv_gas_cantidad) => {
+    try {
+      const response = await fetch(`${API}/inv_redgas/${inv_gas_id}`, {
+        method: 'PATCH',
+        headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ inv_gas_cantidad }),
+      });
+      
+      return await response.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error('Failed to update inventario redgas');
+    }
+  }
+
+  export const deleteInventarioRedgas = async (inv_gas_id) => {
+    try {
+      console.log('Eliminar inventario redgas con id:', inv_gas_id);
+      const res = await fetch(`${API}/inv_redgas/${inv_gas_id}`, {
+        method: 'DELETE',
+      });
+      return await res.json();
+    } catch (error) {
+      console.error(error);
+      throw new Error(`Failed to delete inventario redgas with id: ${inv_gas_id}`);
+    }
+  }
 
   export const getClienteHistoricoCaldera = async (cliente_id) => {
     try {

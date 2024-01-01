@@ -207,7 +207,7 @@ const EquipoInventario = () => {
                     <DataTable.Row key={item.key}>
                       <DataTable.Cell style={{ color: 'black' }}>{item.name}</DataTable.Cell>
                       <DataTable.Cell style={{ color: 'black' }}>{item.brand}</DataTable.Cell>
-                      <DataTable.Cell style={{ color: 'black' }}>{item.ubicacion}</DataTable.Cell>
+                      <DataTable.Cell numeric style={{ color: 'black' }}>{item.ubicacion}</DataTable.Cell>
                       <DataTable.Cell numeric style={{ color: 'black' }}>
                         {item.cantidad}
                       </DataTable.Cell>

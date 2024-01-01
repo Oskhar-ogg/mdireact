@@ -24,7 +24,7 @@ const CalefontInventario = () => {
 
   const handleAgregarRepuesto = async () => {
     try {
-      const response = await saveCalefontInventario(inventarioData);
+      const response = await saveInventarioCalefont(inventarioData);
       console.log(response);
       setInventarioData({
         inv_calefont_tipo_repuesto: '',
@@ -46,7 +46,7 @@ const CalefontInventario = () => {
       // Extract inv_calefont_id from selectedItem
       const { inv_calefont_id } = selectedItem;
 
-      const response = await updateCalefontInventario({ inv_calefont_cantidad, inv_calefont_id });
+      const response = await updateInventarioCalefont({ inv_calefont_cantidad, inv_calefont_id });
       console.log(response);
 
       setInventarioData({
@@ -81,7 +81,7 @@ const CalefontInventario = () => {
   const handleBorrarRepuesto = async () => {
     try {
       const { inv_calefont_id } = inventarioData;
-      await deleteCalefontInventario(inv_calefont_id);
+      await deleteInventarioCalefont(inv_calefont_id);
       setVisibleEditarModal(false);
       fetchData(); // Refrescar los datos después de borrar un repuesto
     } catch (error) {

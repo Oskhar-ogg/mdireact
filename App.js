@@ -66,7 +66,7 @@ import SubirFacturas from './src/mas/facturas/subirfacturas'
         <Stack.Screen name='Bombas de agua' component={BombaInventario} />
         <Stack.Screen name='Calderas' component={CalderaInventario} />
         <Stack.Screen name='Calefont' component={CalefontInventario} />
-        <Stack.Screen name='Equipos eléctricos' component={EquipoInventario} />
+        <Stack.Screen name='Aire Acondicionado' component={EquipoInventario} />
         <Stack.Screen name='Redes de gas' component={GasInventario} />
         <Stack.Screen name='Bitácoras' component={ListaBitacoras} options={({navigation}) => ({ headerRight: () => (
           <TouchableOpacity onPress={() => navigation.navigate('Agregar Bitácora')}>

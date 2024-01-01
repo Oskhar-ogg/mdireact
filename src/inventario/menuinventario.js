@@ -21,7 +21,7 @@ export default function MenuInventario () {
         navigation.navigate('Bombas de agua')
     }
     const handleEquipoPress = () => {
-        navigation.navigate('Equipos eléctricos')
+        navigation.navigate('Aire Acondicionado')
     }
     const handleGasPress = () => {
         navigation.navigate('Redes de gas')
