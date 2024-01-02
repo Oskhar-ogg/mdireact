@@ -1,74 +1,74 @@
-import React, { useEffect, useState } from 'react';
-import { AntDesign } from '@expo/vector-icons';
-import { SafeAreaView, View, RefreshControl, FlatList, TouchableOpacity, Linking } from 'react-native';
-import { Card, Text, Button, Avatar } from 'react-native-paper'; // Cambiado a React Native Paper
-import { getClientes, getClienteHistoricoCaldera, getClienteHistoricoCalefont } from '../../../api';
-import { useNavigation, useIsFocused } from '@react-navigation/native';
-import styles from '../../style';
-import BottomBar from '../../componentes/bottombar';
+import React, { useEffect, useState } from 'react'
+import { AntDesign } from '@expo/vector-icons'
+import { SafeAreaView, View, RefreshControl, FlatList, TouchableOpacity, Linking } from 'react-native'
+import { Card, Text, Button, Avatar } from 'react-native-paper' // Cambiado a React Native Paper
+import { getClientes, getClienteHistoricoCaldera, getClienteHistoricoCalefont } from '../../../api'
+import { useNavigation, useIsFocused } from '@react-navigation/native'
+import styles from '../../style'
+import BottomBar from '../../componentes/bottombar'
 
 export default function ListaCliente() {
-  const navigation = useNavigation();
+  const navigation = useNavigation()
   const handleCallButtonPress = (phoneNumber) => {
     if (phoneNumber) {
-      const telUrl = `tel:${phoneNumber}`;
+      const telUrl = `tel:${phoneNumber}`
       Linking.openURL(telUrl)
         .then(() => {
-          console.log(`Aplicación de llamadas abierta con éxito: ${telUrl}`);
+          console.log(`Aplicación de llamadas abierta con éxito: ${telUrl}`)
         })
         .catch((error) => {
-          console.error('Error al abrir la aplicación de llamadas', error);
-        });
+          console.error('Error al abrir la aplicación de llamadas', error)
+        })
     }
-  };
+  }
 
   const handleWhatsAppButtonPress = (phoneNumber) => {
     if (phoneNumber) {
-      const whatsappUrl = `https://api.whatsapp.com/send/?phone=56${phoneNumber}&text&app_absent=0`;
+      const whatsappUrl = `https://api.whatsapp.com/send/?phone=56${phoneNumber}&text&app_absent=0`
       Linking.openURL(whatsappUrl)
         .then(() => {
-          console.log(`URL de WhatsApp abierta con éxito: ${whatsappUrl}`);
+          console.log(`URL de WhatsApp abierta con éxito: ${whatsappUrl}`)
         })
         .catch((error) => {
-          console.error('Error al abrir la URL', error);
+          console.error('Error al abrir la URL', error)
           // Intenta abrir la URL en el navegador del sistema
-          const systemBrowserUrl = `https://wa.me/56${phoneNumber}`;
+          const systemBrowserUrl = `https://wa.me/56${phoneNumber}`
           Linking.openURL(systemBrowserUrl)
             .then(() => {
-              console.log(`URL abierta en el navegador del sistema: ${systemBrowserUrl}`);
+              console.log(`URL abierta en el navegador del sistema: ${systemBrowserUrl}`)
             })
             .catch((systemBrowserError) => {
-              console.error('Error al abrir la URL en el navegador del sistema', systemBrowserError);
-            });
-        });
+              console.error('Error al abrir la URL en el navegador del sistema', systemBrowserError)
+            })
+        })
     }
-  };
+  }
 
   const handleMapsPress = async (direccion, comuna) => {
     if (direccion && comuna) {
-      const direccionCompleta = `${direccion}, ${comuna}`;
-      const mapsUrl = `https://www.google.com/maps/place/${encodeURIComponent(direccionCompleta)}`;
-      Linking.openURL(mapsUrl);
+      const direccionCompleta = `${direccion}, ${comuna}`
+      const mapsUrl = `https://www.google.com/maps/place/${encodeURIComponent(direccionCompleta)}`
+      Linking.openURL(mapsUrl)
     } else {
-      console.error('Dirección o comuna faltantes');
+      console.error('Dirección o comuna faltantes')
     }
-  };
+  }
 
-  const [refreshing, setRefreshing] = useState(false);
-  const [cliente, setCliente] = useState([]);
-  const isFocused = useIsFocused();
+  const [refreshing, setRefreshing] = useState(false)
+  const [cliente, setCliente] = useState([])
+  const isFocused = useIsFocused()
 
   const cargarCliente = async () => {
     try {
-      const data = await getClientes();
+      const data = await getClientes()
       const clientesOrdenados = data.sort((a, b) =>
       a.cliente_nombre.localeCompare(b.cliente_nombre)
-    );
-    setCliente(clientesOrdenados);
+    )
+    setCliente(clientesOrdenados)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const customCardTheme = {
     colors: {
@@ -79,17 +79,17 @@ export default function ListaCliente() {
       surface: '', // Color de la superficie
       accent: '#ffffff', // Color de acento
     },
-  };
+  }
 
   const onRefresh = React.useCallback(async () => {
-    setRefreshing(true);
-    await cargarCliente();
-    setRefreshing(false);
-  }, []);
+    setRefreshing(true)
+    await cargarCliente()
+    setRefreshing(false)
+  }, [])
 
   useEffect(() => {
-    cargarCliente();
-  }, [isFocused]);
+    cargarCliente()
+  }, [isFocused])
 
   const CardClientes = React.memo(({ item }) => (
     <Card theme={customCardTheme} style={{ alignItems: 'center' }} mode='outlined'>
@@ -133,7 +133,7 @@ export default function ListaCliente() {
         </Button>
       </Card.Actions>
     </Card>
-  ));
+  ))
   
   
 
@@ -152,5 +152,5 @@ export default function ListaCliente() {
       <View style={{ height: 20 }}></View>
       <BottomBar />
     </SafeAreaView>
-  );
+  )
 }

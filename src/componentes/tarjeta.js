@@ -1,50 +1,50 @@
 //SECTOR DE IMPORTS UTILIZADOS
-import React, { useEffect, useState} from 'react';
-import { View, TouchableOpacity, ImageBackground } from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { StatusBar } from 'expo-status-bar';
-import styles from '../style';
-import { Button, Text, Card} from '@rneui/base';
+import React, { useEffect, useState} from 'react'
+import { View, TouchableOpacity, ImageBackground } from 'react-native'
+import { FontAwesome } from '@expo/vector-icons'
+import { StatusBar } from 'expo-status-bar'
+import styles from '../style'
+import { Button, Text, Card} from '@rneui/base'
 //conexión api
 import {MontoMesBitacora, MontoBitacora} from '../../api.js'
 
 const Tarjeta = () => { 
-    const [montoMes, setMontoMes] = useState('');
-    const [montoTotal, setMontoTotal] = useState('');
+    const [montoMes, setMontoMes] = useState('')
+    const [montoTotal, setMontoTotal] = useState('')
   
     useEffect(() => {
       // Llamar a la función para obtener el monto del mes
-      obtenerMontoMes();
-      obtenerMontoTotal();
-    }, []);
+      obtenerMontoMes()
+      obtenerMontoTotal()
+    }, [])
   
     const obtenerMontoMes = async () => {
       try {
-        const monto = await MontoMesBitacora();
+        const monto = await MontoMesBitacora()
         if (monto >= 0) {
-          setMontoMes(monto);
+          setMontoMes(monto)
         }
          else {
-          console.error('La respuesta de obtenerMontoMes no es válida:', monto);
+          console.error('La respuesta de obtenerMontoMes no es válida:', monto)
         }
       } catch (error) {
-        console.error('Error al obtener el monto del mes:', error);
+        console.error('Error al obtener el monto del mes:', error)
       }
-    };
+    }
 
     const obtenerMontoTotal = async () => {
       try {
-        const monto = await MontoBitacora();
+        const monto = await MontoBitacora()
         if (monto >= 0) {
-          setMontoTotal(monto);
+          setMontoTotal(monto)
         }
          else {
-          console.error('La respuesta de obtenerMontoTotal no es válida:', monto);
+          console.error('La respuesta de obtenerMontoTotal no es válida:', monto)
         }
       } catch (error) {
-        console.error('Error al obtener el monto total:', error);
+        console.error('Error al obtener el monto total:', error)
       }
-    };
+    }
 
     return (
       <ImageBackground source={require('../../assets/tarjeta.jpg')} style={styles.image}>
@@ -56,7 +56,7 @@ const Tarjeta = () => {
         </View>
   
       </ImageBackground>
-    );
-  };
+    )
+  }
   
-  export default Tarjeta;
+  export default Tarjeta

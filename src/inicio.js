@@ -9,7 +9,7 @@ import { useNavigation } from '@react-navigation/native'
 //----------------------------------------------------------------------------------------
 //SECTOR VENTANA INICIO 
 export default function Inicio () {  
-    const navigation = useNavigation();
+    const navigation = useNavigation()
     const handleAgregarBitacoraPress = () => {
         navigation.navigate('Agregar Bitácora')
         }
@@ -62,8 +62,8 @@ export default function Inicio () {
             </View>
         <View><BottomBar/></View>            
         </View>
-    );
-};
+    )
+}
 
 const styles = StyleSheet.create({
     container: {
@@ -101,5 +101,5 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-});
+})
 //----------------------------------------------------------------------------------------

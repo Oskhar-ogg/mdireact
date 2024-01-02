@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Avatar, Button, Card, List, Text } from 'react-native-paper';
-import { FlatList, View, Alert } from 'react-native';
-import BottomBar from '../componentes/bottombar';
-import { getBitacoraID, deleteBitacora  } from '../../api';
-import { useNavigation } from '@react-navigation/native';
-import styles from '../style';
+import React, { useEffect, useState } from 'react'
+import { Avatar, Button, Card, List, Text } from 'react-native-paper'
+import { FlatList, View, Alert } from 'react-native'
+import BottomBar from '../componentes/bottombar'
+import { getBitacoraID, deleteBitacora  } from '../../api'
+import { useNavigation } from '@react-navigation/native'
+import styles from '../style'
 
 const LeftContent = props => <Avatar.Icon {...props} icon="book-open-page-variant" theme={{colors: {primary:'white'}}} />
 
 const Verbitacora = ({ route }) => {
-    const navigation = useNavigation();
-    const { bitacora_id } = route.params;
-    console.log('bitacora_id', bitacora_id);
+    const navigation = useNavigation()
+    const { bitacora_id } = route.params
+    console.log('bitacora_id', bitacora_id)
   
-    const [bitacora, setBitacora] = useState({});
+    const [bitacora, setBitacora] = useState({})
     const handleDelete = async (bitacora_id) => {
         Alert.alert("Eliminar bitácora", "¿Estás seguro que deseas eliminar esta bitácora?", [
           {
@@ -23,23 +23,23 @@ const Verbitacora = ({ route }) => {
           {
             text: "Eliminar",
             onPress: async () => {
-              await deleteBitacora(bitacora_id);
-              console.log('Bitacora eliminada correctamente');
-              navigation.navigate('Bitácoras');
+              await deleteBitacora(bitacora_id)
+              console.log('Bitacora eliminada correctamente')
+              navigation.navigate('Bitácoras')
           },
           },
         ])
-    };
+    }
 
     useEffect(() => {
     const fetchData = async () => {
-      const data = await getBitacoraID(bitacora_id);
-      console.log(data);
-      setBitacora(data);
-    };
+      const data = await getBitacoraID(bitacora_id)
+      console.log(data)
+      setBitacora(data)
+    }
 
-    fetchData();
-  }, [bitacora_id]);
+    fetchData()
+  }, [bitacora_id])
 
   return (
     <View style={styles.container}>
@@ -70,7 +70,7 @@ const Verbitacora = ({ route }) => {
       </Card>)}/>
   </View>
   <BottomBar />
-  </View>);
-};
+  </View>)
+}
 
-export default Verbitacora;
+export default Verbitacora

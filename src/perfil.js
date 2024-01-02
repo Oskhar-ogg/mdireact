@@ -1,52 +1,52 @@
-import React, { useEffect, useState } from "react";
-import { View, Dimensions, StyleSheet } from "react-native";
-import { Card, Avatar, Text, Button } from "@rneui/base";
-import { useNavigation } from "@react-navigation/native";
-import { getAuth, signOut } from 'firebase/auth';
-import { ScrollView } from "react-native";
-import { getTecnico } from "../api";
-import BottomBar from "./componentes/bottombar";
+import React, { useEffect, useState } from "react"
+import { View, Dimensions, StyleSheet } from "react-native"
+import { Card, Avatar, Text, Button } from "@rneui/base"
+import { useNavigation } from "@react-navigation/native"
+import { getAuth, signOut } from 'firebase/auth'
+import { ScrollView } from "react-native"
+import { getTecnico } from "../api"
+import BottomBar from "./componentes/bottombar"
 
-const screenHeight = Dimensions.get('screen').height;
-const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height
+const screenWidth = Dimensions.get('screen').width
 
 export default function Perfil() {
-  const navigation = useNavigation();
-  const auth = getAuth(); // Obtener la instancia de autenticación
+  const navigation = useNavigation()
+  const auth = getAuth() // Obtener la instancia de autenticación
   const [tecnico, setTecnico] = useState({
     tecnico_nombre: '',
     tecnico_correo: '',
     tecnico_telefono: '',
-  });
+  })
 
   const handleLogout = async () => {
     try {
-      await signOut(auth);
-      navigation.navigate('Login');
+      await signOut(auth)
+      navigation.navigate('Login')
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      console.error('Error al cerrar sesión:', error)
     }
-  };
+  }
 
   const cargarTecnico = async () => {
     try {
-      const [tecnicoData] = await getTecnico(); // Desestructura el array
-      console.log('Datos del técnico:', tecnicoData);
+      const [tecnicoData] = await getTecnico() // Desestructura el array
+      console.log('Datos del técnico:', tecnicoData)
       setTecnico({
         tecnico_nombre: tecnicoData.tecnico_nombre,
         tecnico_correo: tecnicoData.tecnico_correo,
         tecnico_telefono: tecnicoData.tecnico_telefono,
-      });
+      })
     } catch (error) {
-      console.error('Error al cargar el técnico:', error);
+      console.error('Error al cargar el técnico:', error)
     }
-  };
+  }
   
   
 
   useEffect(() => {
-    cargarTecnico();
-  }, []);
+    cargarTecnico()
+  }, [])
 
   return (
     <View style={styles.container}>
@@ -88,7 +88,7 @@ export default function Perfil() {
         <BottomBar />
       </View>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -101,4 +101,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-});
+})

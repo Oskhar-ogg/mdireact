@@ -1,11 +1,11 @@
 //SECTOR DE IMPORTS UTILIZADOS
-import React from 'react';
-import { View, TouchableOpacity} from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import styles from '../style';
-import {Text} from '@rneui/themed';
+import React from 'react'
+import { View, TouchableOpacity} from 'react-native'
+import { FontAwesome } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import { StatusBar } from 'expo-status-bar'
+import styles from '../style'
+import {Text} from '@rneui/themed'
 
 const BottomBar = () =>{
     const navigation = useNavigation()

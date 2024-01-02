@@ -1,8 +1,8 @@
-import { StatusBar } from 'expo-status-bar';
-import {View, TouchableOpacity, Alert, ScrollView, Image} from 'react-native';
-import { AntDesign } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native';
-import { Card , Text} from '@rneui/themed';
+import { StatusBar } from 'expo-status-bar'
+import {View, TouchableOpacity, Alert, ScrollView, Image} from 'react-native'
+import { AntDesign } from '@expo/vector-icons'
+import { useNavigation } from '@react-navigation/native'
+import { Card , Text} from '@rneui/themed'
 import BottomBar from '../componentes/bottombar'
 import styles from '../style'
 

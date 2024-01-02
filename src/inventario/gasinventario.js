@@ -1,114 +1,119 @@
-import * as React from 'react';
-import { View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
-import BottomBar from '../componentes/bottombar';
-import styles from '../style';
-import { DataTable, Card, Button, Portal, Modal, Provider, Text, DefaultTheme } from 'react-native-paper';
-import { CheckBox } from '@rneui/base';
+import * as React from 'react'
+import { View, TouchableOpacity, ScrollView, TextInput } from 'react-native'
+import BottomBar from '../componentes/bottombar'
+import styles from '../style'
+import { DataTable, Card, Button, Portal, Modal, Provider, Text, DefaultTheme } from 'react-native-paper'
+import { CheckBox } from '@rneui/base'
 // Asegúrate de importar la función correcta desde tu archivo de API
-import { getInventarioRedgas, saveInventarioRedgas, deleteInventarioRedgas, updateInventarioRedgas } from '../../api';
+import { getInventarioRedgas, saveInventarioRedgas, deleteInventarioRedgas, updateInventarioRedgas } from '../../api'
 
 const GasInventario = () => {
-  const [page, setPage] = React.useState(0);
-  const [numberOfItemsPerPageList] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
-  const [itemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0]);
-  const [items, setItems] = React.useState([]);
-  const [visibleAgregarModal, setVisibleAgregarModal] = React.useState(false);
-  const [visibleEditarModal, setVisibleEditarModal] = React.useState(false);
-  const [selectedItem, setSelectedItem] = React.useState(null);
+  const [page, setPage] = React.useState(0)
+  const [numberOfItemsPerPageList] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+  const [itemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0])
+  const [items, setItems] = React.useState([])
+  const [visibleAgregarModal, setVisibleAgregarModal] = React.useState(false)
+  const [visibleEditarModal, setVisibleEditarModal] = React.useState(false)
+  const [selectedItem, setSelectedItem] = React.useState(null)
 
   const [inventarioData, setInventarioData] = React.useState({
     inv_red_gas_tipo_repuesto: '',
     inv_red_gas_marca_repuesto: '',
     inv_red_gas_ubicacion: '',
     inv_red_gas_cantidad: 0,
-  });
+  })
 
   const handleAgregarRepuesto = async () => {
     try {
-      const response = await saveInventarioRedgas(inventarioData);
-      console.log(response);
+      const response = await saveInventarioRedgas(inventarioData)
+      console.log(response)
       setInventarioData({
         inv_red_gas_tipo_repuesto: '',
         inv_red_gas_marca_repuesto: '',
         inv_red_gas_ubicacion: '',
         inv_red_gas_cantidad: 0,
-      });
-      setVisibleAgregarModal(false);
-      fetchData(); // Refrescar los datos después de agregar un repuesto
+      })
+      setVisibleAgregarModal(false)
+      fetchData() // Refrescar los datos después de agregar un repuesto
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const handleEditarRepuesto = async () => {
     try {
-      const { inv_red_gas_cantidad } = inventarioData;
+      const { inv_red_gas_cantidad } = inventarioData
 
       // Extract inv_red_gas_id from selectedItem
-      const { inv_red_gas_id } = selectedItem;
+      const { inv_red_gas_id } = selectedItem
 
-      const response = await updateInventarioRedgas({ inv_red_gas_cantidad, inv_red_gas_id });
-      console.log(response);
+      const response = await updateInventarioRedgas(inv_red_gas_id, inv_red_gas_cantidad)
+      console.log(response)
 
       setInventarioData({
         inv_red_gas_tipo_repuesto: '',
         inv_red_gas_marca_repuesto: '',
         inv_red_gas_ubicacion: '',
         inv_red_gas_cantidad: '',
-      });
+      })
 
-      setVisibleEditarModal(false);
-      fetchData(); // Refrescar los datos después de editar un repuesto
+      setVisibleEditarModal(false)
+      fetchData() // Refrescar los datos después de editar un repuesto
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const incrementarCantidadEditar = () => {
     setInventarioData((prevData) => ({
       ...prevData,
       inv_red_gas_cantidad: (parseInt(prevData.inv_red_gas_cantidad, 10) + 1).toString(),
-    }));
-  };
+    }))
+  }
 
   const decrementarCantidadEditar = () => {
     setInventarioData((prevData) => {
-      const cantidad = parseInt(prevData.inv_red_gas_cantidad, 10);
-      const nuevaCantidad = cantidad > 0 ? (cantidad - 1).toString() : '0';
-      return { ...prevData, inv_red_gas_cantidad: nuevaCantidad };
-    });
-  };
+      const cantidad = parseInt(prevData.inv_red_gas_cantidad, 10)
+      const nuevaCantidad = cantidad > 0 ? (cantidad - 1).toString() : '0'
+      return { ...prevData, inv_red_gas_cantidad: nuevaCantidad }
+    })
+  }
 
   const handleBorrarRepuesto = async () => {
     try {
-      const { inv_red_gas_id } = inventarioData;
-      await deleteInventarioRedgas(inv_red_gas_id);
-      setVisibleEditarModal(false);
-      fetchData(); // Refrescar los datos después de borrar un repuesto
+      const { inv_red_gas_id } = inventarioData
+      await deleteInventarioRedgas(inv_red_gas_id)
+      setVisibleEditarModal(false)
+      fetchData() // Refrescar los datos después de borrar un repuesto
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const handleInputChange = (key, value) => {
-    setInventarioData({ ...inventarioData, [key]: value });
-  };
+    setInventarioData({ ...inventarioData, [key]: value })
+  }
 
-  const showAgregarModal = () => setVisibleAgregarModal(true);
+  const showAgregarModal = () => setVisibleAgregarModal(true)
   const hideAgregarModal = () => {
-    setVisibleAgregarModal(false);
+    setVisibleAgregarModal(false)
     setInventarioData({
       inv_red_gas_tipo_repuesto: '',
       inv_red_gas_marca_repuesto: '',
       inv_red_gas_ubicacion: '',
       inv_red_gas_cantidad: '',
-    });
-  };
+    })
+  }
 
   const showEditarModal = (item) => {
-    setSelectedItem(item);
-    setInventarioData({
+    setSelectedItem({
       inv_red_gas_id: item.key,
+      name: item.name,
+      brand: item.brand,
+      cantidad: item.cantidad,
+      ubicacion: item.ubicacion,
+    });
+    setInventarioData({
       inv_red_gas_tipo_repuesto: item.name,
       inv_red_gas_marca_repuesto: item.brand,
       inv_red_gas_cantidad: item.cantidad,
@@ -116,7 +121,7 @@ const GasInventario = () => {
     });
     setVisibleEditarModal(true);
   };
-
+  
   const hideEditarModal = () => {
     setVisibleEditarModal(false);
     setInventarioData({
@@ -126,33 +131,34 @@ const GasInventario = () => {
       inv_red_gas_cantidad: '',
     });
   };
-
+  
   React.useEffect(() => {
     fetchData();
   }, []);
+  
 
   const fetchData = async () => {
     try {
-      const response = await getInventarioRedgas();
+      const response = await getInventarioRedgas()
       const data = response.map((item) => ({
         key: item.inv_red_gas_id,
         name: item.inv_red_gas_tipo_repuesto,
         brand: item.inv_red_gas_marca_repuesto,
         cantidad: item.inv_red_gas_cantidad,
         ubicacion: item.inv_red_gas_ubicacion,
-      }));
-      setItems(data);
+      }))
+      setItems(data)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
-  const from = page * itemsPerPage;
-  const to = Math.min((page + 1) * itemsPerPage, items.length);
+  const from = page * itemsPerPage
+  const to = Math.min((page + 1) * itemsPerPage, items.length)
 
   React.useEffect(() => {
-    setPage(0);
-  }, [itemsPerPage]);
+    setPage(0)
+  }, [itemsPerPage])
 
   const customDataTableTheme = {
     ...DefaultTheme, // Include the default theme to ensure all required properties are present
@@ -165,7 +171,7 @@ const GasInventario = () => {
       surface: '#033342', // Color de la superficie
       accent: '#ff4081', // Color de acento
     },
-  };
+  }
 
   return (
     <Provider theme={customDataTableTheme}>
@@ -268,7 +274,7 @@ const GasInventario = () => {
                       keyboardType="numeric"
                       maxLength={4}
                       placeholder="Ej: 9999"
-                      value={inventarioData.inv_red_gas_cantidad}  // Convierte el número a cadena
+                      value={String(inventarioData.inv_red_gas_cantidad)}  // Convierte el número a cadena
                       onChangeText={(text) => handleInputChange('inv_red_gas_cantidad', text)}
                     />
 
@@ -367,7 +373,7 @@ const GasInventario = () => {
               </Modal>
             </Portal>
           </Provider>
-        );
-      };
+        )
+      }
 
-export default GasInventario;
+export default GasInventario

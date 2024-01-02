@@ -1,58 +1,58 @@
-import React, { useState, useEffect } from "react";
-import { ScrollView, SafeAreaView, View, Button, TouchableOpacity, TextInput, Switch, Image, Alert } from "react-native";
-import { useNavigation } from "@react-navigation/native";
-import { AntDesign } from "@expo/vector-icons";
-import { Card, Text, CheckBox } from "@rneui/base";
-import DateTimePickerAndroid from '@react-native-community/datetimepicker';
-import BottomBar from "../componentes/bottombar";
-import * as ImagePicker from 'expo-image-picker';
-import styles from "../style";
-import axios from 'axios';
+import React, { useState, useEffect } from "react"
+import { ScrollView, SafeAreaView, View, Button, TouchableOpacity, TextInput, Switch, Image, Alert } from "react-native"
+import { useNavigation } from "@react-navigation/native"
+import { AntDesign } from "@expo/vector-icons"
+import { Card, Text, CheckBox } from "@rneui/base"
+import DateTimePickerAndroid from '@react-native-community/datetimepicker'
+import BottomBar from "../componentes/bottombar"
+import * as ImagePicker from 'expo-image-picker'
+import styles from "../style"
+import axios from 'axios'
 //CONEXIÓN DE LA API
-import { saveBitacora } from "../../api";
+import { saveBitacora } from "../../api"
 
 const SubirImagen = ({ onImageUpload }) => {
-  const [imagenes, setImagenes] = useState([]);
+  const [imagenes, setImagenes] = useState([])
 
   const guardarImagen = async (imagen) => {
     try {
-      const formData = new FormData();
+      const formData = new FormData()
       formData.append('file', {
         uri: imagen,
         type: 'image/jpeg',
         name: 'filename.jpg',
-      });
+      })
 
       const response = await axios.post('http://192.168.1.93:3001/subir/bitacora', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      });
+      })
 
-      const data = response.data;
-      return data.url;
+      const data = response.data
+      return data.url
     } catch (error) {
-      console.error('Error in guardarImagen:', error);
+      console.error('Error in guardarImagen:', error)
 
       if (axios.isAxiosError(error)) {
         if (!error.response) {
-          console.error('Network Error - No response received');
+          console.error('Network Error - No response received')
         } else {
-          console.error('Request failed with status:', error.response.status);
+          console.error('Request failed with status:', error.response.status)
         }
       } else {
-        console.error('Non-Axios error:', error.message);
+        console.error('Non-Axios error:', error.message)
       }
 
-      throw error;
+      throw error
     }
-  };
+  }
 
   const seleccionarImagenes = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
     if (status !== 'granted') {
-      console.log('Permiso denegado para acceder a la biblioteca de medios');
-      return;
+      console.log('Permiso denegado para acceder a la biblioteca de medios')
+      return
     }
 
     const result = await ImagePicker.launchCameraAsync({
@@ -61,14 +61,14 @@ const SubirImagen = ({ onImageUpload }) => {
       aspect: [4, 3],
       quality: 1,
       maxNumberOfFiles: 10 - imagenes.length, // Limitar a un máximo de 10 fotos
-    });
+    })
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
-      const url = await guardarImagen(result.assets[0].uri);
-      onImageUpload(url);
-      setImagenes([...imagenes, url]);
+      const url = await guardarImagen(result.assets[0].uri)
+      onImageUpload(url)
+      setImagenes([...imagenes, url])
     }
-  };
+  }
 
   const eliminarImagen = (index) => {
     Alert.alert(
@@ -83,14 +83,14 @@ const SubirImagen = ({ onImageUpload }) => {
         {
           text: 'Eliminar',
           onPress: () => {
-            const nuevasImagenes = imagenes.filter((_, i) => i !== index);
-            setImagenes(nuevasImagenes);
+            const nuevasImagenes = imagenes.filter((_, i) => i !== index)
+            setImagenes(nuevasImagenes)
           },
           style: 'destructive',
         },
       ],
-    );
-  };
+    )
+  }
 
   return (
     <View>
@@ -109,20 +109,20 @@ const SubirImagen = ({ onImageUpload }) => {
         <AntDesign name="camera" size={55} color="black" />
       </TouchableOpacity>
     </View>
-  );
-};
+  )
+}
 
 export default function AgregarBitacora() {
 
-  const [isSwitchOn, setIsSwitchOn] = useState(false);
-  const [isDatePickerVisible, setDatePickerVisible] = useState(false);
+  const [isSwitchOn, setIsSwitchOn] = useState(false)
+  const [isDatePickerVisible, setDatePickerVisible] = useState(false)
 
-  const toggleSwitch = () => setIsSwitchOn(!isSwitchOn);
+  const toggleSwitch = () => setIsSwitchOn(!isSwitchOn)
 
-  const navigation = useNavigation();
+  const navigation = useNavigation()
   const handleBitacoraPress = () => {
-    navigation.navigate('Bitácoras');
-  };
+    navigation.navigate('Bitácoras')
+  }
 
   const [bitacoraData, setBitacoraData] = useState({
     bitacora_title: '',
@@ -132,15 +132,15 @@ export default function AgregarBitacora() {
     bitacora_valor_cobrado: '0',
     bitacora_fecha: new Date().toLocaleDateString(), // Formato yyyy-mm-dd
     tecnico_id: 1,
-  });
+  })
 
   const handleInputChange = (key, value) => {
-    setBitacoraData({ ...bitacoraData, [key]: value });
-  };
+    setBitacoraData({ ...bitacoraData, [key]: value })
+  }
 
   const handleImageUpload = (imageUrl) => {
-    setBitacoraData({ ...bitacoraData, bitacora_imageURL: imageUrl });
-  };
+    setBitacoraData({ ...bitacoraData, bitacora_imageURL: imageUrl })
+  }
 
   const handleAgregarBitacora = async () => {
     if (
@@ -149,42 +149,42 @@ export default function AgregarBitacora() {
       !bitacoraData.bitacora_trabajo ||
       !bitacoraData.bitacora_estado
     ) {
-      alert('Por favor, completa todos los campos obligatorios.');
-      return;
+      alert('Por favor, completa todos los campos obligatorios.')
+      return
     }
     try {
-      const response = await saveBitacora(bitacoraData);
+      const response = await saveBitacora(bitacoraData)
       if (response.error) {
-        console.error(response.error);
-        alert('Error al guardar la bitácora. Por favor, inténtalo de nuevo.');
+        console.error(response.error)
+        alert('Error al guardar la bitácora. Por favor, inténtalo de nuevo.')
       } else {
-        alert('Bitácora guardada exitosamente.');
-        handleBitacoraPress();
+        alert('Bitácora guardada exitosamente.')
+        handleBitacoraPress()
       }
     } catch (error) {
-      console.error(error);
-      alert('Error al guardar la bitácora. Por favor, inténtalo de nuevo.');
+      console.error(error)
+      alert('Error al guardar la bitácora. Por favor, inténtalo de nuevo.')
     }
-  };
+  }
 
   const showDatePicker = () => {
-    setDatePickerVisible(true);
-  };
+    setDatePickerVisible(true)
+  }
 
   const hideDatePicker = () => {
-    setDatePickerVisible(false);
-  };
+    setDatePickerVisible(false)
+  }
 
   const handleDateConfirm = (event, selectedDate) => {
     if (selectedDate) {
-      const year = selectedDate.getFullYear();
-      const month = String(selectedDate.getMonth() + 1).padStart(2, '0');
-      const day = String(selectedDate.getDate()).padStart(2, '0');
-      const formattedDate = `${day}/${month}/${year}`;
-      handleInputChange('bitacora_fecha', formattedDate);
+      const year = selectedDate.getFullYear()
+      const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
+      const day = String(selectedDate.getDate()).padStart(2, '0')
+      const formattedDate = `${day}/${month}/${year}`
+      handleInputChange('bitacora_fecha', formattedDate)
     }
-    hideDatePicker();
-  };
+    hideDatePicker()
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -287,5 +287,5 @@ export default function AgregarBitacora() {
       <View style={{ height: 50 }}></View>
       <BottomBar />
     </SafeAreaView>
-  );
+  )
 }

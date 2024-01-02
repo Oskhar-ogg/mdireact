@@ -36,7 +36,7 @@ export default function AgregarCita (){
     }
     hideDatePicker()
   
-    };
+    }
     const handleTimeConfirm = (event, selectedTime) => {
        if (selectedTime) {
         const hours = String(selectedTime.getHours()).padStart(2, '0')

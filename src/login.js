@@ -9,36 +9,36 @@ import { auth } from '../firebaseConfig'
 
 
 export default function Login() {
-    const [email, setEmail] = React.useState("");
-    const [contraseña, setContraseña] = React.useState("");
-    const navigation = useNavigation();
+    const [email, setEmail] = React.useState("")
+    const [contraseña, setContraseña] = React.useState("")
+    const navigation = useNavigation()
   
     const handleSignIn = () => {
       signInWithEmailAndPassword(auth, email, contraseña)
         .then((userCredential) => {
           console.info("Ingreso exitoso")
-          const user = userCredential.user;
-          navigation.navigate('Inicio');
-          setEmail("");
-          setContraseña("");
+          const user = userCredential.user
+          navigation.navigate('Inicio')
+          setEmail("")
+          setContraseña("")
         })
         .catch(error => {
-          Alert.alert("Error al pasar la autenticación", "Credenciales no válidas.\nRevisar error ortográfico o conexión a internet.\nSi el problema persiste contactar con el administrador.");
-        });
-    };
+          Alert.alert("Error al pasar la autenticación", "Credenciales no válidas.\nRevisar error ortográfico o conexión a internet.\nSi el problema persiste contactar con el administrador.")
+        })
+    }
   
     //const handleRegistro = () => {
       //createUserWithEmailAndPassword(auth, email, contraseña)
         //.then((userCredential) => {
-          //Alert.alert("Cuenta creada con éxito");
-         // const user = userCredential.user;
-         // console.log(user);
+          //Alert.alert("Cuenta creada con éxito")
+         // const user = userCredential.user
+         // console.log(user)
        // })
         //.catch(error => {
-          //console.error("NO SE HA PODIDO REALIZAR LA ACCIÓN");
-          //Alert.alert(error);
-        //});
-    //};
+          //console.error("NO SE HA PODIDO REALIZAR LA ACCIÓN")
+          //Alert.alert(error)
+        //})
+    //}
   
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff'}}>
@@ -80,6 +80,6 @@ export default function Login() {
           </Card>
           </View>
       </SafeAreaView>
-    );
+    )
   }
   

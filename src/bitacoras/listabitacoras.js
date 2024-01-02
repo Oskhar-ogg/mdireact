@@ -18,43 +18,43 @@ export default function ListaBitacoras (){
     const [refreshing, setRefreshing] = React.useState(false)
     const [listabitacora, setListabitacora] = useState([])
     const isFocused = useIsFocused()
-    const navigation = useNavigation();
+    const navigation = useNavigation()
     const cargarBitacora = async () => {
         try {
-          const data = await getBitacora();
-          setListabitacora(data);
+          const data = await getBitacora()
+          setListabitacora(data)
         } catch (error) {
-          console.error(error);
+          console.error(error)
           // Manejar el error de la Promesa aquí, por ejemplo, mostrar un mensaje de error al usuario
         }
-      };
+      }
     
       const onRefresh = React.useCallback(async () => {
-        setRefreshing(true);
-        await cargarBitacora();
-        setRefreshing(false);
-      }, []);
+        setRefreshing(true)
+        await cargarBitacora()
+        setRefreshing(false)
+      }, [])
 
       const handleVerbitacora = (bitacora_id) => {
-        navigation.navigate('Ver bitácora', { bitacora_id });
-      };
+        navigation.navigate('Ver bitácora', { bitacora_id })
+      }
       
       useEffect(() => {
-        cargarBitacora();
-       console.log('Bitacora cargada correctamente');
-      }, [isFocused]);
+        cargarBitacora()
+       console.log('Bitacora cargada correctamente')
+      }, [isFocused])
     
     
         
       const getColor = (estado) => {
         if (estado === 'Finalizado') {
-          return 'green'; // Color verde para el estado "Finalizado"
+          return 'green' // Color verde para el estado "Finalizado"
         } else if (estado === 'En proceso') {
-          return 'yellow'; // Color amarillo para el estado "En progreso"
+          return 'yellow' // Color amarillo para el estado "En progreso"
         } else {
-          return 'red'; // Color rojo para el estado "No iniciado" o cualquier otro estado
+          return 'red' // Color rojo para el estado "No iniciado" o cualquier otro estado
         }
-      };
+      }
     
     return(
         <SafeAreaView style={styles.container}>

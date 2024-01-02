@@ -1,19 +1,19 @@
-import * as React from 'react';
-import { View, TouchableOpacity, ScrollView, TextInput } from 'react-native';
-import BottomBar from '../componentes/bottombar';
-import styles from '../style';
-import { DataTable, Card, Button, Portal, Modal, Provider, Text, DefaultTheme } from 'react-native-paper';
-import { CheckBox } from '@rneui/base';
-import { getInventarioCaldera, saveInventarioCaldera, deleteInventarioCaldera, updateInventarioCaldera } from '../../api';
+import * as React from 'react'
+import { View, TouchableOpacity, ScrollView, TextInput } from 'react-native'
+import BottomBar from '../componentes/bottombar'
+import styles from '../style'
+import { DataTable, Card, Button, Portal, Modal, Provider, Text, DefaultTheme } from 'react-native-paper'
+import { CheckBox } from '@rneui/base'
+import { getInventarioCaldera, saveInventarioCaldera, deleteInventarioCaldera, updateInventarioCaldera } from '../../api'
 
 const CalderaInventario = () => {
-  const [page, setPage] = React.useState(0);
-  const [numberOfItemsPerPageList] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
-  const [itemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0]);
-  const [items, setItems] = React.useState([]);
-  const [visibleAgregarModal, setVisibleAgregarModal] = React.useState(false);
-  const [visibleEditarModal, setVisibleEditarModal] = React.useState(false);
-  const [selectedItem, setSelectedItem] = React.useState(null);
+  const [page, setPage] = React.useState(0)
+  const [numberOfItemsPerPageList] = React.useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11])
+  const [itemsPerPage, onItemsPerPageChange] = React.useState(numberOfItemsPerPageList[0])
+  const [items, setItems] = React.useState([])
+  const [visibleAgregarModal, setVisibleAgregarModal] = React.useState(false)
+  const [visibleEditarModal, setVisibleEditarModal] = React.useState(false)
+  const [selectedItem, setSelectedItem] = React.useState(null)
 
   const [inventarioData, setInventarioData] = React.useState({
     inv_cal_tipo_repuesto: '',
@@ -21,32 +21,37 @@ const CalderaInventario = () => {
     inv_cal_ubicacion: '',
     inv_cal_cantidad:  0 ,
     
-  });
+  })
 
   const handleAgregarRepuesto = async () => {
     try {
-      const response = await saveInventarioCaldera(inventarioData);
-      console.log(response);
+      const response = await saveInventarioCaldera({
+        ...inventarioData,
+        inv_cal_cantidad: parseInt(inventarioData.inv_cal_cantidad, 10),
+      });
+
       setInventarioData({
         inv_cal_tipo_repuesto: '',
         inv_cal_marca_repuesto: '',
         inv_cal_ubicacion: '',
         inv_cal_cantidad: 0,
-      });
-      setVisibleAgregarModal(false);
-      fetchData(); // Refrescar los datos después de agregar un repuesto
+      })
+      setVisibleAgregarModal(false)
+      fetchData() // Refrescar los datos después de agregar un repuesto
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const handleEditarRepuesto = async () => {
     try {
-      const { inv_cal_cantidad } = inventarioData;
+      const { inv_cal_cantidad } = inventarioData
       const { inv_cal_id } = selectedItem;
   
-      const response = await updateInventarioCaldera({ inv_cal_cantidad, inv_cal_id });
-      console.log(response);
+      const response = await updateInventarioCaldera(
+        inv_cal_id,  
+        parseInt(inv_cal_cantidad, 10)
+      );
   
       setInventarioData({
         inv_cal_tipo_repuesto: '',
@@ -54,7 +59,7 @@ const CalderaInventario = () => {
         inv_cal_ubicacion: '',
         inv_cal_cantidad: '',
       });
-      
+  
       setVisibleEditarModal(false);
       fetchData(); // Refrescar los datos después de editar un repuesto
     } catch (error) {
@@ -62,58 +67,66 @@ const CalderaInventario = () => {
     }
   };
   
+  
 
-  const incrementarCantidadEditar = () => {
-    setInventarioData((prevData) => ({
-      ...prevData,
-      inv_cal_cantidad: (parseInt(prevData.inv_cal_cantidad, 10) + 1).toString(),
-    }));
-  };
+const incrementarCantidadEditar = () => {
+  setInventarioData((prevData) => ({
+    ...prevData,
+    inv_cal_cantidad: (parseInt(prevData.inv_cal_cantidad, 10) + 1).toString(),
+  }));
+};
 
-  const decrementarCantidadEditar = () => {
-    setInventarioData((prevData) => {
-      const cantidad = parseInt(prevData.inv_cal_cantidad, 10);
-      const nuevaCantidad = cantidad > 0 ? (cantidad - 1).toString() : '0';
-      return { ...prevData, inv_cal_cantidad: nuevaCantidad };
-    });
-  };
+const decrementarCantidadEditar = () => {
+  setInventarioData((prevData) => {
+    const cantidad = parseInt(prevData.inv_cal_cantidad, 10);
+    const nuevaCantidad = cantidad > 0 ? (cantidad - 1).toString() : '0';
+    return { ...prevData, inv_cal_cantidad: nuevaCantidad };
+  });
+};
+
 
   const handleBorrarRepuesto = async () => {
     try {
-      const { inv_cal_id } = inventarioData;
-      await deleteInventarioCaldera(inv_cal_id);
-      setVisibleEditarModal(false);
-      fetchData(); // Refrescar los datos después de borrar un repuesto
+      const { inv_cal_id } = inventarioData
+      await deleteInventarioCaldera(inv_cal_id)
+      setVisibleEditarModal(false)
+      fetchData() // Refrescar los datos después de borrar un repuesto
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
   const handleInputChange = (key, value) => {
-    setInventarioData({ ...inventarioData, [key]: value });
-  };
+    setInventarioData({ ...inventarioData, [key]: value })
+  }
 
-  const showAgregarModal = () => setVisibleAgregarModal(true);
-  const hideAgregarModal = () => {setVisibleAgregarModal(false);
+  const showAgregarModal = () => setVisibleAgregarModal(true)
+  const hideAgregarModal = () => {setVisibleAgregarModal(false)
     setInventarioData({
       inv_calefont_tipo_repuesto: '',
       inv_calefont_marca_repuesto: '',
       inv_calefont_ubicacion: '',
       inv_calefont_cantidad: '',
-    });
-    };
+    })
+    }
 
-  const showEditarModal = (item) => {
-    setSelectedItem(item);
-    setInventarioData({
-      inv_cal_id: item.key,
-      inv_cal_tipo_repuesto: item.name,
-      inv_cal_marca_repuesto: item.brand,
-      inv_cal_cantidad: item.cantidad,
-      inv_cal_ubicacion: item.ubicacion,
-    });
-    setVisibleEditarModal(true);
-  };
+    const showEditarModal = (item) => {
+      setSelectedItem({
+        inv_cal_id: item.key,
+        name: item.name,
+        brand: item.brand,
+        cantidad: item.cantidad,
+        ubicacion: item.ubicacion,
+      });
+      setInventarioData({
+        inv_cal_tipo_repuesto: item.name,
+        inv_cal_marca_repuesto: item.brand,
+        inv_cal_cantidad: item.cantidad,
+        inv_cal_ubicacion: item.ubicacion,
+      });
+      setVisibleEditarModal(true);
+    }
+    
 
   const hideEditarModal = () => { setVisibleEditarModal(false)
     setInventarioData({
@@ -121,35 +134,35 @@ const CalderaInventario = () => {
       inv_calefont_marca_repuesto: '',
       inv_calefont_ubicacion: '',
       inv_calefont_cantidad: '',
-    });
-    };
+    })
+    }
 
   React.useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   const fetchData = async () => {
     try {
-      const response = await getInventarioCaldera();
+      const response = await getInventarioCaldera()
       const data = response.map((item) => ({
         key: item.inv_cal_id,
         name: item.inv_cal_tipo_repuesto,
         brand: item.inv_cal_marca_repuesto,
         cantidad: item.inv_cal_cantidad,
         ubicacion: item.inv_cal_ubicacion,
-      }));
-      setItems(data);
+      }))
+      setItems(data)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
 
-  const from = page * itemsPerPage;
-  const to = Math.min((page + 1) * itemsPerPage, items.length);
+  const from = page * itemsPerPage
+  const to = Math.min((page + 1) * itemsPerPage, items.length)
 
   React.useEffect(() => {
-    setPage(0);
-  }, [itemsPerPage]);
+    setPage(0)
+  }, [itemsPerPage])
 
   const customDataTableTheme = {
     ...DefaultTheme, // Include the default theme to ensure all required properties are present
@@ -162,7 +175,7 @@ const CalderaInventario = () => {
       surface: '#033342', // Color de la superficie
       accent: '#ff4081', // Color de acento
     },
-  };
+  }
   
   return (
     <Provider theme={customDataTableTheme}>
@@ -372,7 +385,7 @@ const CalderaInventario = () => {
               </Button>
               <Button
                 mode="outlined"
-                onPress={handleBorrarRepuesto}
+                onPress={handleBorrarRepuesto()}
                 style={{ borderColor: '#ff4081', marginLeft: 10 }}
                 color="#ff4081"
               >
@@ -383,7 +396,7 @@ const CalderaInventario = () => {
         </Modal>
       </Portal>
     </Provider>
-  );
-};
+  )
+}
 
-export default CalderaInventario;
+export default CalderaInventario

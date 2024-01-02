@@ -1,39 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, TouchableOpacity } from 'react-native';
-import { Card } from '@rneui/base';
-import { useNavigation } from '@react-navigation/native';
-import { getClienteHistoricoCaldera, getClienteHistoricoCalefont } from '../../../api';
-import styles from '../../style';
-import BottomBar from '../../componentes/bottombar';
+import React, { useEffect, useState } from 'react'
+import { View, Text, FlatList, TouchableOpacity } from 'react-native'
+import { Card } from '@rneui/base'
+import { useNavigation } from '@react-navigation/native'
+import { getClienteHistoricoCaldera, getClienteHistoricoCalefont } from '../../../api'
+import styles from '../../style'
+import BottomBar from '../../componentes/bottombar'
 
 const HistoricoCliente = ({ route }) => {
-    const [historicoCaldera, setHistoricoCaldera] = useState([]);
-    const [historicoCalefont, setHistoricoCalefont] = useState([]);
-    const { clienteId } = route.params;
-    const navigation = useNavigation();
+    const [historicoCaldera, setHistoricoCaldera] = useState([])
+    const [historicoCalefont, setHistoricoCalefont] = useState([])
+    const { clienteId } = route.params
+    const navigation = useNavigation()
 
     const handleHistoricoCaldera = async () => {
         try {
-            const response = await getClienteHistoricoCaldera(clienteId);
-            setHistoricoCaldera(response.data);
+            const response = await getClienteHistoricoCaldera(clienteId)
+            setHistoricoCaldera(response.data)
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
-    };
+    }
 
     const handleHistoricoCalefont = async () => {
         try {
-            const response = await getClienteHistoricoCalefont(clienteId);
-            setHistoricoCalefont(response.data);
+            const response = await getClienteHistoricoCalefont(clienteId)
+            setHistoricoCalefont(response.data)
         } catch (error) {
-            console.log(error);
+            console.log(error)
         }
-    };
+    }
 
     useEffect(() => {
-        handleHistoricoCaldera();
-        handleHistoricoCalefont();
-    }, [clienteId]);
+        handleHistoricoCaldera()
+        handleHistoricoCalefont()
+    }, [clienteId])
 
     return (
         <View style={styles.container}>
@@ -83,7 +83,7 @@ const HistoricoCliente = ({ route }) => {
                 <View style={{ height: 50 }}></View>
                 <BottomBar />
             </View>
-    );
-};
+    )
+}
 
-export default HistoricoCliente;
+export default HistoricoCliente

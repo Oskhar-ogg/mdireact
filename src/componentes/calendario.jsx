@@ -27,7 +27,7 @@ LocaleConfig.locales['es'] = {
   dayNames: ['Domingo', 'Lunes', 'Martes', 'Miércoles ', 'Jueves', 'Viernes', 'Sábado'],
   dayNamesShort: ['Dom.', 'Lun.', 'Mar.', 'Mié.', 'Jue.', 'Vie.', 'Sáb.'],
   today: 'Hoy',
-};
+}
 LocaleConfig.defaultLocale = 'es'
 
 const Calendario = () => {
@@ -38,7 +38,7 @@ const Calendario = () => {
         hour: 9,
         minute: 0,
         repeats: true
-      };
+      }
 
       await Notifications.scheduleNotificationAsync({
         content: {
@@ -46,7 +46,7 @@ const Calendario = () => {
           body: 'Es hora de revisar tu agenda del día',
         },
         trigger,
-      });
+      })
     } catch (error) {
       console.error(error)
     }
@@ -61,7 +61,7 @@ const Calendario = () => {
       {
         text: 'Eliminar',
         onPress: async () => {
-          await deleteAgenda(agenda_id);
+          await deleteAgenda(agenda_id)
           console.log('Cita eliminada correctamente')
         },
       },
@@ -79,14 +79,14 @@ const Calendario = () => {
         const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(direccionCompleta)}&key=${process.env.EXPO_PUBLIC_MAPS_KEY_API}`
         console.log(apiUrl)
         try {
-            const response = await fetch(apiUrl);
+            const response = await fetch(apiUrl)
 
             if (!response.ok) {
                 console.error('Error en la solicitud a la API de Google Maps:', response.status, await response.text())
-                return;
+                return
             }
 
-            const data = await response.json();
+            const data = await response.json()
             console.log(data)
             if (data.results && data.results.length > 0) {
                 // Obtener la ubicación desde los resultados de la API
@@ -96,7 +96,7 @@ const Calendario = () => {
                 const mapsUrl = `https://www.google.com/maps/place/${location.lat},${location.lng}`
                 console.log(mapsUrl)
                 // Abrir la URL en la aplicación de mapas
-                Linking.openURL(mapsUrl);
+                Linking.openURL(mapsUrl)
             } else {
                 console.error('No se encontraron resultados de ubicación')
             }
@@ -106,13 +106,13 @@ const Calendario = () => {
     } else {
         console.error('Dirección o comuna faltantes')
     }
-};
+}
 
   const cargarItems = async () => {
     try {
-      const agendas = await getAgenda(); // Obtener las citas desde la API
+      const agendas = await getAgenda() // Obtener las citas desde la API
 
-      const formattedItems = {};
+      const formattedItems = {}
 
       agendas.forEach((agenda) => {
         const date = agenda.agenda_fecha
@@ -130,23 +130,23 @@ const Calendario = () => {
           agenda_motivo: agenda.agenda_motivo,
           agenda_hora: agenda.agenda_hora,
           agenda_fecha: agenda.agenda_fecha,
-        });
-      });
+        })
+      })
 
       setItems(formattedItems)
     } catch (error) {
       console.error(error)
     }
-  };
+  }
 
   useEffect(() => {
-    cargarItems();
-    triggerNotificacion(items);
-  }, []);
+    cargarItems()
+    triggerNotificacion(items)
+  }, [])
 
   class Reservation extends PureComponent {
     render() {
-      const { item } = this.props;
+      const { item } = this.props
       const {
         agenda_id,
         agenda_cliente,
@@ -154,7 +154,7 @@ const Calendario = () => {
         agenda_motivo,
         agenda_hora,
         agenda_fecha,
-      } = item;
+      } = item
       return (
         <TouchableOpacity style={styles.AgendaList}>
           <Card style={styles.Card}>
@@ -216,12 +216,12 @@ const Calendario = () => {
             </View>
           </Card>
         </TouchableOpacity>
-      );
+      )
     }
   }
   const renderItem = (item) => {
-    return <Reservation item={item} />;
-  };
+    return <Reservation item={item} />
+  }
 
   const renderEmptyData = () => {
     return (

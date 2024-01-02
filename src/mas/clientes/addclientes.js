@@ -9,7 +9,7 @@ import styles from "../../style"
 import{saveCliente} from "../../../api"
 
 export default function AgregarCliente (){
-    const navigation = useNavigation();
+    const navigation = useNavigation()
     const [clienteData, setClienteData] = useState({
         cliente_nombre: '',
         cliente_direccion: '',

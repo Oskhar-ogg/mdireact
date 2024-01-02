@@ -44,7 +44,7 @@ import SubirFacturas from './src/mas/facturas/subirfacturas'
 //-----------------------------------------------------------------
 //CÓDIGO CONTROLADOR DE LA APLICACIÓN
  export default function App() {
-    const Stack = createNativeStackNavigator();
+    const Stack = createNativeStackNavigator()
     return (
       <PaperProvider>
       <NavigationContainer>
@@ -85,19 +85,20 @@ import SubirFacturas from './src/mas/facturas/subirfacturas'
         })}/>
         <Stack.Screen name='Agregar Nueva Cita' component={AgregarCita}/>
         <Stack.Screen name='Más' component={ListaMas}/>
-        <Stack.Screen name='Boletas' component={ListaBoletas}options={({navigation}) => ({ headerRight: () => (
+        <Stack.Screen name='Boletas' component={ListaBoletas} /*options={({navigation}) => ({ headerRight: () => (
           <TouchableOpacity onPress={() => navigation.navigate('Subir Boletas')}>
             <FontAwesome size = {24} color= "#fff" name = 'plus-square'/>
           </TouchableOpacity>
         ),
-        })}/>
+        })}*/
+        />
         <Stack.Screen name='Subir Boletas' component={SubirBoletas}/>
-        <Stack.Screen name='Facturas' component={ListaFacturas}options={({navigation}) => ({ headerRight: () => (
+        <Stack.Screen name='Facturas' component={ListaFacturas} /*options={({navigation}) => ({ headerRight: () => (
           <TouchableOpacity onPress={() => navigation.navigate('Subir Facturas')}>
             <FontAwesome size = {24} color= "#fff" name = 'plus-square'/>
           </TouchableOpacity>
         ),
-        })}/>
+        })}*//>
         <Stack.Screen name='Subir Facturas' component={SubirFacturas}/>
         <Stack.Screen name='Clientes' component={ListaCliente}options={({navigation}) => ({ headerRight: () => (
           <TouchableOpacity onPress={() => navigation.navigate('Agregar Cliente')}>
@@ -116,7 +117,7 @@ import SubirFacturas from './src/mas/facturas/subirfacturas'
         </Stack.Navigator>
     </NavigationContainer>
     </PaperProvider>
-  );
+  )
 }
 
 
