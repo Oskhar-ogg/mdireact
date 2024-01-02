@@ -1,5 +1,5 @@
-//const API = process.env.EXPO_PUBLIC_API_URL
-const API = 'http://192.168.1.93:3001'
+const API = process.env.EXPO_PUBLIC_API_URL
+//const API = 'http://192.168.1.93:3001'
 
 //SECTOR TARJETA
 export const MontoMesBitacora = async () => {
