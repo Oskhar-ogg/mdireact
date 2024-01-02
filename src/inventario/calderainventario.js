@@ -385,7 +385,7 @@ const decrementarCantidadEditar = () => {
               </Button>
               <Button
                 mode="outlined"
-                onPress={handleBorrarRepuesto()}
+                onPress={handleBorrarRepuesto}
                 style={{ borderColor: '#ff4081', marginLeft: 10 }}
                 color="#ff4081"
               >

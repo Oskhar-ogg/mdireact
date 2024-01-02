@@ -412,24 +412,27 @@ export const getBitacoraID = async (bitacora_id) => {
 
   export const getClienteHistoricoCaldera = async (cliente_id) => {
     try {
-      const res = await fetch(`${API}/mantenciones/caldera?cliente_id=${cliente_id}`)
-      return await res.json()
+      const res = await fetch(`${API}/mantenimiento/caldera/${cliente_id}`);
+      const jsonRes = await res.json();
+      console.log('res:', jsonRes);
+      return jsonRes;
     } catch (error) {
-      console.error(error)
-      throw new Error('Failed to fetch historico mantenciones caldera cliente')
+      console.error(error);
+      throw new Error('Failed to fetch historico mantenciones caldera cliente');
     }
-  }
+  };
   
   export const getClienteHistoricoCalefont = async (cliente_id) => {
     try {
-      const res = await fetch(`${API}/mantenciones/calefont?cliente_id=${cliente_id}`)
-      return await res.json()
+      const res = await fetch(`${API}/mantenimiento/calefont/${cliente_id}`);
+      const jsonRes = await res.json();
+      console.log('res:', jsonRes);
+      return jsonRes;
     } catch (error) {
-      console.error(error)
-      throw new Error('Failed to fetch historico mantenciones calefont cliente')
+      console.error(error);
+      throw new Error('Failed to fetch historico mantenciones calefont cliente');
     }
-  }
-  
+  };
   
   export const saveMantencionesCaldera = async (mantencionesCalderaData) => {
     try {
