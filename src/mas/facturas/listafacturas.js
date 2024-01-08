@@ -67,7 +67,7 @@ export default function ListaBoletas() {
 
   const saveImage = async (uri) => {
     await ensureDirExists()
-    const filename = new Date().getTime() + '.jpeg'
+    const filename = new Date().toLocaleDateString() + '.jpeg'
     const dest = imgDir + filename
     await FileSystem.copyAsync({ from: uri, to: dest })
     setImages([...images, dest])
@@ -76,14 +76,20 @@ export default function ListaBoletas() {
   const uploadImage = async (uri) => {
     setUploading(true)
 
-    await FileSystem.uploadAsync('http://192.168.1.93:3001/subir/factura', uri, {
+    try {await FileSystem.uploadAsync('http://146.83.194.142:1414/subir/factura', uri, {
       httpMethod: 'POST',
       uploadType: FileSystem.FileSystemUploadType.MULTIPART,
       fieldName: 'file'
     })
 
     setUploading(false)
+    Alert.alert('Éxito', 'La imagen ha sido respaldada con éxito.');
+  } catch (error) {
+    setUploading(false);
+    // Mostrar alerta de error si falla la subida
+    Alert.alert('Error', 'Hubo un problema al respaldar la imagen. Inténtalo de nuevo.');
   }
+}
 
   const deleteImage = async (uri) => {
     await FileSystem.deleteAsync(uri)

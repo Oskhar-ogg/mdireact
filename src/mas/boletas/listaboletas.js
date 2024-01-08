@@ -60,33 +60,39 @@ export default function ListaBoletas() {
       result = await ImagePicker.launchCameraAsync(options)
     }
 
-    // Save image if not cancelled
+ 
     if (!result.canceled) {
       saveImage(result.assets[0].uri)
     }
   }
 
-  // Save image to file system
+
   const saveImage = async (uri) => {
     await ensureDirExists()
-    const filename = new Date().getTime() + '.jpeg'
+    const filename = new Date().toLocaleDateString() + '.jpeg'
     const dest = imgDir + filename
     await FileSystem.copyAsync({ from: uri, to: dest })
     setImages([...images, dest])
   }
 
-  // Upload image to server
+
   const uploadImage = async (uri) => {
     setUploading(true)
 
-    await FileSystem.uploadAsync('http://192.168.1.93:3001/subir/boleta', uri, {
+   try { await FileSystem.uploadAsync('http://146.83.194.142:1414/subir/boleta', uri, {
       httpMethod: 'POST',
       uploadType: FileSystem.FileSystemUploadType.MULTIPART,
       fieldName: 'file'
     })
 
     setUploading(false)
+    Alert.alert('Éxito', 'La imagen ha sido respaldada con éxito.');
+  } catch (error) {
+    setUploading(false);
+    // Mostrar alerta de error si falla la subida
+    Alert.alert('Error', 'Hubo un problema al respaldar la imagen. Inténtalo de nuevo.');
   }
+}
 
   const deleteImage = async (uri) => {
     await FileSystem.deleteAsync(uri)

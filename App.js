@@ -5,7 +5,6 @@ import { TouchableOpacity, View, SafeAreaView, ImageBackground, TextInput, Dimen
 import { NavigationContainer, useNavigation} from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { FontAwesome } from '@expo/vector-icons'
-import { Text, Card, Button  } from '@rneui/base'
 
 //-----------------------------------------------------------------
 //SECTOR IMPORTACIÓN DE VENTANAS UTILIZADAS POR LA APP

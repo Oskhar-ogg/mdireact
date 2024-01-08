@@ -19,14 +19,29 @@
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://146.83.194.142:1414",
-        "EXPO_PUBLIC_API_DEV_URL": "http://10.0.2.2:3001"
+        "EXPO_PUBLIC_API_URL" : "http://146.83.194.142:1414",
+        "EXPO_PUBLIC_API_DEV_URL" : "http://10.0.2.2:3001",
+        "EXPO_PUBLIC_FIREBASE_API_KEY" : "AIzaSyCKzLdVNYPz0z19uvvqN-dNxr-MyKTDmaw",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN" : "mdiapp-27515.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID" : "mdiapp-27515",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET" : "mdiapp-27515.appspot.com",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID" : "580799542636",
+        "EXPO_PUBLIC_FIREBASE_APP_ID" : "1:580799542636:web:f0bbe91cba684e0b42ef49",
+        "EXPO_PUBLIC_MAPS_KEY_API" : "AIzaSyBU4OBcwTG7LIPpyOUIau3Luz8v6l00x14"
+
       }
     },
     "production": {
       "env": {
-        "EXPO_PUBLIC_API_URL": "http://146.83.194.142:1414",
-        "EXPO_PUBLIC_API_DEV_URL": "http://10.0.2.2:3001"
+        "EXPO_PUBLIC_API_URL" : "http://146.83.194.142:1414",
+        "EXPO_PUBLIC_API_DEV_URL" : "http://10.0.2.2:3001",
+        "EXPO_PUBLIC_FIREBASE_API_KEY" : "AIzaSyCKzLdVNYPz0z19uvvqN-dNxr-MyKTDmaw",
+        "EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN" : "mdiapp-27515.firebaseapp.com",
+        "EXPO_PUBLIC_FIREBASE_PROJECT_ID" : "mdiapp-27515",
+        "EXPO_PUBLIC_FIREBASE_STORAGE_BUCKET" : "mdiapp-27515.appspot.com",
+        "EXPO_PUBLIC_FIREBASE_MESSAGING_SENDER_ID" : "580799542636",
+        "EXPO_PUBLIC_FIREBASE_APP_ID" : "1:580799542636:web:f0bbe91cba684e0b42ef49",
+        "EXPO_PUBLIC_MAPS_KEY_API" : "AIzaSyBU4OBcwTG7LIPpyOUIau3Luz8v6l00x14"
       }
     },
     "submit": {}

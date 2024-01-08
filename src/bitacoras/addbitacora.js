@@ -13,7 +13,7 @@ import { saveBitacora } from "../../api"
 
 const SubirImagen = ({ onImageUpload }) => {
   const [imagenes, setImagenes] = useState([])
-
+  const API = process.env.EXPO_PUBLIC_API_URL
   const guardarImagen = async (imagen) => {
     try {
       const formData = new FormData()
@@ -22,8 +22,8 @@ const SubirImagen = ({ onImageUpload }) => {
         type: 'image/jpeg',
         name: 'filename.jpg',
       })
-
-      const response = await axios.post('http://192.168.1.93:3001/subir/bitacora', formData, {
+      
+      const response = await axios.post(`${API}/subir/bitacora`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
