@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { View, SafeAreaView, ImageBackground, TouchableOpacity, Alert, TextInput, Dimensions } from "react-native";
-import { Card, Text, Button } from "@rneui/base";
+import { View, SafeAreaView, ImageBackground, TouchableOpacity, Alert, TextInput, Dimensions, KeyboardAvoidingView, Platform } from "react-native";
+import { Card, Text, Button, Icon } from "@rneui/base"; // Asegúrate de tener el Icon importado
 import { useNavigation } from '@react-navigation/native';
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
 import { initializeApp } from 'firebase/app';
@@ -27,6 +27,7 @@ const auth = getAuth(app);
 export default function Login() {
   const [email, setEmail] = useState("");
   const [contraseña, setContraseña] = useState("");
+  const [mostrarContraseña, setMostrarContraseña] = useState(false); // Nuevo estado para controlar la visibilidad de la contraseña
   const navigation = useNavigation();
 
   const handleSignIn = () => {
@@ -50,44 +51,57 @@ export default function Login() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: '#ffffff' }}>
+    <View style={{ flex: 1, backgroundColor: '#ffffff' }}>
       <ImageBackground source={require('../assets/login.png')} style={{ height: Dimensions.get('window').height / 2.5 }} />
-      <View style={styles.bottomView}>
-        <Card>
-          <Card.Title style={{ fontSize: 34, fontWeight: '300', color: 'blue', marginBottom: 15, padding: 20 }}>Bienvenido</Card.Title>
-          <Card.Divider />
-          <View style={{ marginTop: 20 }}>
-            <Text style={{ color: 'blue' }}>Correo</Text>
-            <TextInput
-              style={{ fontSize: 30, fontWeight: '300', color: '#333', marginBottom: 30, borderColor: 'gray', borderWidth: 0.2, borderRadius: 5 }}
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              placeholder='ejemplo@aaaa.cl'
-              autoCapitalize="none"
-              autoComplete="email"
-              inputMode="email"
-              textContentType="emailAddress"
-              keyboardType="email-address"
-              leftIcon={{ type: 'MaterialIcons', name: 'contact-mail' }}
-            />
+      <KeyboardAvoidingView
+        behavior={Platform.select({
+          ios: 'padding',
+          android: 'height', padding: 20,
+        })}
+        style={{ flex: 1 }}
+      >
+        <View style={styles.bottomView}>
+          <Card>
+            <Card.Title style={{ fontSize: 34, fontWeight: '300', color: 'blue', marginBottom: 15, padding: 20 }}>Bienvenido</Card.Title>
             <Card.Divider />
-            <Text style={{ color: 'blue' }}>Contraseña</Text>
-            <TextInput
-              style={{ fontFamily: 'Roboto-Medium', fontSize: 30, fontWeight: '300', color: '#333', marginBottom: 30, borderColor: 'gray', borderWidth: 0.2, borderRadius: 5 }}
-              value={contraseña}
-              onChangeText={(text) => setContraseña(text)}
-              placeholder='*********'
-              secureTextEntry={true}
-              textContentType="password"
-              leftIcon={{ type: 'MaterialIcons', name: 'lock' }}
-            />
-          </View>
-          <Card.Divider />
-          <TouchableOpacity>
-            <Button onPress={() => handleSignIn()}>INGRESAR</Button>
-          </TouchableOpacity>
-        </Card>
-      </View>
-    </SafeAreaView>
+            <View style={{ marginTop: 20 }}>
+              <Text style={{ color: 'blue' }}>Correo</Text>
+              <TextInput
+                style={{ fontSize: 30, fontWeight: '300', color: '#333', marginBottom: 30, borderColor: 'gray', borderWidth: 0.2, borderRadius: 5 }}
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                placeholder='ejemplo@aaaa.cl'
+                autoCapitalize="none"
+                autoComplete="email"
+                inputMode="email"
+                textContentType="emailAddress"
+                keyboardType="email-address"
+                leftIcon={{ type: 'MaterialIcons', name: 'contact-mail' }}
+              />
+              <Card.Divider />
+              <Text style={{ color: 'blue' }}>Contraseña</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <TextInput
+                  style={{ fontFamily: 'Roboto-Medium', fontSize: 30, fontWeight: '300', color: '#333', marginBottom: 30, borderColor: 'gray', borderWidth: 0.2, borderRadius: 5, flex: 1 }}
+                  value={contraseña}
+                  onChangeText={(text) => setContraseña(text)}
+                  placeholder='*********'
+                  secureTextEntry={!mostrarContraseña} // Utiliza el estado para determinar si la contraseña debe ocultarse o mostrarse
+                  textContentType="password"
+                  leftIcon={{ type: 'MaterialIcons', name: 'lock' }}
+                />
+                <TouchableOpacity onPress={() => setMostrarContraseña(!mostrarContraseña)}>
+                  <Icon name={mostrarContraseña ? 'visibility-off' : 'visibility'} /> 
+                </TouchableOpacity>
+              </View>
+            </View>
+            <Card.Divider />
+            <TouchableOpacity>
+              <Button onPress={() => handleSignIn()}>INGRESAR</Button>
+            </TouchableOpacity>
+          </Card>
+        </View>
+      </KeyboardAvoidingView>
+    </View>
   );
 }

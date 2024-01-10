@@ -14,7 +14,11 @@ exports.getAgenda = async (req, res) => {
 exports.saveAgenda = async (req, res) => {
 
     try {
-        const pool = await conexiondb();
+        console.log(req.body); // Agregar esta línea para verificar los datos recibidos
+        const pool = conexiondb();
+        const fechaParts = req.body.agenda_fecha.split('-'); // Suponiendo que el formato original es 'DD/MM/YYYY'
+        const formattedFecha = `${fechaParts[2]}-${fechaParts[1]}-${fechaParts[0]}`;
+        req.body.agenda_fecha = formattedFecha;
         const [rows] = await pool.query('INSERT INTO agenda SET ?', [req.body]);
         res.json({
             id: rows.insertId,
@@ -29,7 +33,7 @@ exports.saveAgenda = async (req, res) => {
 exports.deleteAgenda = async (req, res) => {
     try {
         const pool = await conexiondb();
-        const [rows] = await pool.query('DELETE FROM agenda WHERE id = ?', [req.params.id]);
+        const [rows] = await pool.query('DELETE FROM agenda WHERE agenda_id = ?', [req.params.id]);
         res.json({
             affectedRows: rows.affectedRows
         });

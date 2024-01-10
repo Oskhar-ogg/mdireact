@@ -1,6 +1,4 @@
 const { conexiondb } = require('../libs/db_connect');
-const fs = require('fs').promises;
-const path = require('path');
 
 exports.getBitacora = async (req, res) => {
     try {
@@ -18,7 +16,7 @@ exports.getBitacora = async (req, res) => {
     try {
       console.log(req.body); // Agregar esta línea para verificar los datos recibidos
       const connect = conexiondb();
-      const fechaParts = req.body.bitacora_fecha.split('/'); // Suponiendo que el formato original es 'DD/MM/YYYY'
+      const fechaParts = req.body.bitacora_fecha.split('-'); // Suponiendo que el formato original es 'DD/MM/YYYY'
       const formattedFecha = `${fechaParts[2]}-${fechaParts[1]}-${fechaParts[0]}`;
       req.body.bitacora_fecha = formattedFecha;
       const [results] = await connect.query(
@@ -38,24 +36,15 @@ exports.getBitacora = async (req, res) => {
 
 exports.deleteBitacora = async (req, res) => {
     try {
-        const pool = conexiondb();
+        const db = conexiondb();
         const { id } = req.params;
-
-        const bitacora = await pool.query('SELECT bitacora_imagenes FROM bitacora WHERE bitacora_id = $1', [id]);
-        const imagenes = bitacora.rows[0].bitacora_imagenes;
-
-        for (const imagen of imagenes) {
-            const imagePath = path.join(__dirname, '..', 'images', 'bitacora', imagen);
-            await fs.unlink(imagePath);
-        }
-
-        await pool.query('DELETE FROM bitacora WHERE bitacora_id = $1', [id]);
-        res.json({ message: 'Entrada de bitácora eliminada exitosamente' });
+        const [rows] = await db.query('DELETE FROM bitacora WHERE bitacora_id = ?', [id]);
+        res.json(rows);
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Error al eliminar la entrada de bitácora' });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-};
+}
 
 exports.getBitacoraById = async (req, res) => {
     try{

@@ -5,6 +5,7 @@ import BottomBar from '../componentes/bottombar'
 import styles from '../style'
 import { Card, Text, CheckBox } from '@rneui/themed'
 import DateTimePickerAndroid from '@react-native-community/datetimepicker'
+import Calendario from '../componentes/calendario'
 //CONEXIÓN A LA API 
 import { saveAgenda } from '../../api'
 
@@ -16,8 +17,8 @@ export default function AgregarCita (){
         agenda_direccion:'',
         agenda_motivo: '',
         agenda_comuna: '',
-        agenda_hora: '00:00', // Formato HH:mm
-        agenda_fecha: new Date().toISOString().split('T')[0], // Formato yyyy-mm-dd
+        agenda_hora: '09:00', // Formato HH:mm
+        agenda_fecha: new Date().toLocaleDateString(), // Formato yyyy-mm-dd
         tecnico_id: 1,
     })
     const handleInputChange = (key, value) => {
@@ -26,26 +27,26 @@ export default function AgregarCita (){
       
       
 // IMPLEMENTACIÓN FUNCIONES DATETIMEPICKER DE ANDROID
-    const handleDateConfirm = (event, selectedDate) => {
+const handleDateConfirm = (event, selectedDate) => {
     if (selectedDate) {
     const year = selectedDate.getFullYear()
     const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
     const day = String(selectedDate.getDate()).padStart(2, '0')
-    const formattedDate = `${year}-${month}-${day}`
+    const formattedDate = `${day}-${month}-${year}`
     handleInputChange('agenda_fecha', formattedDate)
     }
     hideDatePicker()
-  
     }
+
     const handleTimeConfirm = (event, selectedTime) => {
-       if (selectedTime) {
-        const hours = String(selectedTime.getHours()).padStart(2, '0')
-        const minutes = String(selectedTime.getMinutes()).padStart(2, '0')
-        const formattedTime = `${hours}:${minutes}`
-        handleInputChange('agenda_hora', formattedTime)
-       }
-          hideTimePicker()
+    if (selectedTime) {
+    const hours = String(selectedTime.getHours()).padStart(2, '0')
+    const minutes = String(selectedTime.getMinutes()).padStart(2, '0')
+    const formattedTime = `${hours}:${minutes}`
+    handleInputChange('agenda_hora', formattedTime)
     }
+    hideTimePicker();
+    };
     const [isDatePickerVisible, setDatePickerVisible] = useState(false)
 
   const showDatePicker = () => {
@@ -70,6 +71,7 @@ export default function AgregarCita (){
         try{
             saveAgenda(citaData)
             navigation.navigate('Agenda')
+            Calendario.cargarItems()
         }
         catch(error){
             console.error("Error al agregar la cita en la agenda 🚫🚫")
@@ -154,25 +156,28 @@ export default function AgregarCita (){
             <DateTimePickerAndroid
             value={new Date()}
             mode="date"
-            display="default"
+            display="calendar"
             onChange={handleDateConfirm}
+            minimumDate={new Date()}
             />
             )}
             <Card.Divider />
             <Text h4>Hora de la cita</Text>
             <TouchableOpacity onPress={showTimePicker}>
-            <Text h4>{citaData.agenda_hora || 'Hora'}</Text>
+              <Text h4>{citaData.agenda_hora || 'Hora'}</Text>
             </TouchableOpacity>
             {isTimePickerVisible && (
-            <DateTimePickerAndroid
-            value={new Date()}
-            mode="time"
-            display="default"
-            onChange={handleTimeConfirm}
-            />
-            )}
-             <Card.Divider />
-                <Button title="Agregar Cita" onPress={handleAgregarCita} />
+              <DateTimePickerAndroid
+                value={new Date()}
+                mode="time"
+                display="spinner"
+                onChange={handleTimeConfirm}
+                is24Hour={true}
+                minuteInterval={5}
+              />
+              )}
+            <Card.Divider />
+            <Button title="Agregar Cita" onPress={handleAgregarCita} />
             </Card>
             </View>
             </ScrollView>

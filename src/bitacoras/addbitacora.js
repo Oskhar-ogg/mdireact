@@ -11,107 +11,6 @@ import axios from 'axios'
 //CONEXIÓN DE LA API
 import { saveBitacora } from "../../api"
 
-const SubirImagen = ({ onImageUpload }) => {
-  const [imagenes, setImagenes] = useState([])
-  const API = process.env.EXPO_PUBLIC_API_URL
-  const guardarImagen = async (imagen) => {
-    try {
-      const formData = new FormData()
-      formData.append('file', {
-        uri: imagen,
-        type: 'image/jpeg',
-        name: 'filename.jpg',
-      })
-      
-      const response = await axios.post(`${API}/subir/bitacora`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      })
-
-      const data = response.data
-      return data.url
-    } catch (error) {
-      console.error('Error in guardarImagen:', error)
-
-      if (axios.isAxiosError(error)) {
-        if (!error.response) {
-          console.error('Network Error - No response received')
-        } else {
-          console.error('Request failed with status:', error.response.status)
-        }
-      } else {
-        console.error('Non-Axios error:', error.message)
-      }
-
-      throw error
-    }
-  }
-
-  const seleccionarImagenes = async () => {
-    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync()
-    if (status !== 'granted') {
-      console.log('Permiso denegado para acceder a la biblioteca de medios')
-      return
-    }
-
-    const result = await ImagePicker.launchCameraAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: false,
-      aspect: [4, 3],
-      quality: 1,
-      maxNumberOfFiles: 10 - imagenes.length, // Limitar a un máximo de 10 fotos
-    })
-
-    if (!result.canceled && result.assets && result.assets.length > 0) {
-      const url = await guardarImagen(result.assets[0].uri)
-      onImageUpload(url)
-      setImagenes([...imagenes, url])
-    }
-  }
-
-  const eliminarImagen = (index) => {
-    Alert.alert(
-      'Eliminar imagen',
-      '¿Estás seguro de que quieres eliminar la imagen seleccionada?',
-      [
-        {
-          text: 'Cancelar',
-          onPress: () => console.log('Cancelado'),
-          style: 'cancel',
-        },
-        {
-          text: 'Eliminar',
-          onPress: () => {
-            const nuevasImagenes = imagenes.filter((_, i) => i !== index)
-            setImagenes(nuevasImagenes)
-          },
-          style: 'destructive',
-        },
-      ],
-    )
-  }
-
-  return (
-    <View>
-      <Text h4>Subir imágenes</Text>
-      <Text style={{ color: 'red' }}>*Máximo 10 fotos</Text>
-      <ScrollView horizontal>
-        {imagenes.map((imagen, index) => (
-          <TouchableOpacity onPress={() => eliminarImagen(index)} key={index}>
-            <View>
-              <Image source={{ uri: imagen }} style={{ width: 200, height: 200 }} />
-            </View>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-      <TouchableOpacity onPress={seleccionarImagenes}>
-        <AntDesign name="camera" size={55} color="black" />
-      </TouchableOpacity>
-    </View>
-  )
-}
-
 export default function AgregarBitacora() {
 
   const [isSwitchOn, setIsSwitchOn] = useState(false)
@@ -124,7 +23,7 @@ export default function AgregarBitacora() {
     navigation.navigate('Bitácoras')
   }
 
-  const [bitacoraData, setBitacoraData] = useState({
+  const estadoInicial = {
     bitacora_title: '',
     bitacora_description: '',
     bitacora_trabajo: '',
@@ -132,7 +31,13 @@ export default function AgregarBitacora() {
     bitacora_valor_cobrado: '0',
     bitacora_fecha: new Date().toLocaleDateString(), // Formato yyyy-mm-dd
     tecnico_id: 1,
-  })
+  };
+
+  const resetAddbitacora = () => {
+    setBitacoraData(estadoInicial)
+  }
+
+  const [bitacoraData, setBitacoraData] = useState(estadoInicial)
 
   const handleInputChange = (key, value) => {
     setBitacoraData({ ...bitacoraData, [key]: value })
@@ -159,6 +64,7 @@ export default function AgregarBitacora() {
         alert('Error al guardar la bitácora. Por favor, inténtalo de nuevo.')
       } else {
         alert('Bitácora guardada exitosamente.')
+        resetAddbitacora()
         handleBitacoraPress()
       }
     } catch (error) {
@@ -180,7 +86,7 @@ export default function AgregarBitacora() {
       const year = selectedDate.getFullYear()
       const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
       const day = String(selectedDate.getDate()).padStart(2, '0')
-      const formattedDate = `${day}/${month}/${year}`
+      const formattedDate = `${day}-${month}-${year}`
       handleInputChange('bitacora_fecha', formattedDate)
     }
     hideDatePicker()
@@ -278,6 +184,7 @@ export default function AgregarBitacora() {
               mode="date"
               display="default"
               onChange={handleDateConfirm}
+              maximumDate={new Date()}
             />
           )}
           <Card.Divider />

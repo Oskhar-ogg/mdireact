@@ -49,7 +49,9 @@ const Verbitacora = ({ route }) => {
     keyExtractor={(item) => item.bitacora_id.toString()}
     renderItem={({item}) =>( 
     <Card>
-        <Card.Title title={new Date(item.bitacora_fecha).toLocaleDateString()} subtitle={item.bitacora_trabajo + ' || ' + item.bitacora_estado} left={LeftContent} />
+        <Card.Title title={new Date(item.bitacora_fecha).toLocaleDateString('es-ES', {
+                  timeZone: 'UTC', // Ajusta esto según el huso horario correcto
+                })} subtitle={item.bitacora_trabajo + ' || ' + item.bitacora_estado} left={LeftContent} />
         <Card.Title title = {item.bitacora_title} />
         <Card.Content>
           <Text variant="bodyMedium" style={{ fontSize: 22 }}>{item.bitacora_description}</Text>

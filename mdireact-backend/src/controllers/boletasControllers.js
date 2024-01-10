@@ -29,7 +29,7 @@ exports.saveBoleta = async (req, res) => {
                 await connection.rollback();
                 res.status(500).json({ error: 'Error al subir la boleta' });
             } finally {
-                connection.end(); // Close the connection after committing or rolling back
+                connection.end(); 
             }
         });
     } catch (error) {
@@ -42,7 +42,7 @@ exports.saveBoleta = async (req, res) => {
 
 exports.getBoleta = async (req, res) => {
     try {
-        const pool = conexiondb(); // Assuming conexiondb returns a MySQL pool
+        const pool = conexiondb(); 
         const [rows] = await pool.query('SELECT * FROM boletas');
         res.json(rows);
     } catch (error) {
@@ -54,10 +54,9 @@ exports.getBoleta = async (req, res) => {
 
 // Controlador para eliminar una boleta
 exports.deleteBoleta = (req, res) => {
-    // Obtener el ID de la boleta desde el cliente
     const boletaId = req.params.id;
 
-    // Eliminar la boleta de la base de datos utilizando el ID
+    
     conexiondb.eliminarBoleta(boletaId)
         .then(() => {
             // Enviar una respuesta exitosa al cliente

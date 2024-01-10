@@ -63,11 +63,11 @@ const Calendario = () => {
         onPress: async () => {
           await deleteAgenda(agenda_id)
           console.log('Cita eliminada correctamente')
+          cargarItems() // Llamada a cargarItems después de eliminar
         },
       },
     ])
   }
-
   const [items, setItems] = useState({})
 
   const handleMapsPress = async (direccion, comuna) => {
@@ -108,41 +108,43 @@ const Calendario = () => {
     }
 }
 
-  const cargarItems = async () => {
-    try {
-      const agendas = await getAgenda() // Obtener las citas desde la API
+const cargarItems = async () => {
+  try {
+    const agendas = await getAgenda() // Obtener las citas desde la API
 
-      const formattedItems = {}
+    const formattedItems = {}
 
-      agendas.forEach((agenda) => {
-        const date = agenda.agenda_fecha
-        const dateString = new Date(date).toISOString().split('T')[0]
+    agendas.forEach((agenda) => {
+      const date = agenda.agenda_fecha
+      const dateString = new Date(date).toISOString().split('T')[0]
 
-        if (!formattedItems[dateString]) {
-          formattedItems[dateString] = []
-        }
+      if (!formattedItems[dateString]) {
+        formattedItems[dateString] = []
+      }
 
-        formattedItems[dateString].push({
-          agenda_id: agenda.agenda_id,
-          agenda_cliente: agenda.agenda_cliente,
-          agenda_direccion: agenda.agenda_direccion,
-          agenda_comuna: agenda.agenda_comuna,
-          agenda_motivo: agenda.agenda_motivo,
-          agenda_hora: agenda.agenda_hora,
-          agenda_fecha: agenda.agenda_fecha,
-        })
+      formattedItems[dateString].push({
+        agenda_id: agenda.agenda_id,
+        agenda_cliente: agenda.agenda_cliente,
+        agenda_direccion: agenda.agenda_direccion,
+        agenda_comuna: agenda.agenda_comuna,
+        agenda_motivo: agenda.agenda_motivo,
+        agenda_hora: agenda.agenda_hora,
+        agenda_fecha: agenda.agenda_fecha,
       })
+    })
 
-      setItems(formattedItems)
-    } catch (error) {
-      console.error(error)
-    }
+    setItems(formattedItems)
+  } catch (error) {
+    console.error(error)
   }
+}
+useEffect(() => {
+  cargarItems();
+}, []);
 
-  useEffect(() => {
-    cargarItems()
-    triggerNotificacion(items)
-  }, [])
+useEffect(() => {
+  triggerNotificacion(items);
+}, [items.length]);
 
   class Reservation extends PureComponent {
     render() {
@@ -168,7 +170,9 @@ const Calendario = () => {
               <Text h4>Lugar: {agenda_direccion}</Text>
               <Text h4>Motivo: {agenda_motivo}</Text>
               <Text h4>Hora: {agenda_hora}</Text>
-              <Text h4>Fecha: {new Date(agenda_fecha).toLocaleDateString()}</Text>
+              <Text h4>Fecha: {new Date (agenda_fecha).toLocaleDateString('es-ES', {
+                timeZone: 'UTC', // Ajusta esto según el huso horario correcto
+              })}</Text>
               <Button
                 title="Ir a la dirección"
                 icon={{
@@ -215,6 +219,7 @@ const Calendario = () => {
               />
             </View>
           </Card>
+          <View style={{ height: 60 }}></View>
         </TouchableOpacity>
       )
     }
@@ -239,7 +244,7 @@ const Calendario = () => {
       <Agenda
         items={items}
         loadItemsForMonth={cargarItems}
-        selected={new Date().toISOString().split('T')[0]}
+        selected={new Date()}
         renderItem={renderItem}
         renderEmptyData={renderEmptyData}
         showClosingKnob={true}

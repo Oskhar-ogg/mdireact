@@ -1,19 +1,66 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useState } from 'react';
-import { Button, ScrollView, StyleSheet, Text, View } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { Button, ScrollView, StyleSheet, Text, View, Alert, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { Audio } from 'expo-av';
 import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
-import BottomBar from '../componentes/bottombar';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { Card } from '@rneui/base';
+import { StatusBar } from 'expo-status-bar';
 
 const recordingDir = FileSystem.documentDirectory + 'grabadora/';
 
-const ensureDirExists = async () => {
-  const dirInfo = await FileSystem.getInfoAsync(recordingDir);
+const ensureDirExists = async (dir) => {
+  const dirInfo = await FileSystem.getInfoAsync(dir);
   if (!dirInfo.exists) {
-    await FileSystem.makeDirectoryAsync(recordingDir, { intermediates: true });
+    await FileSystem.makeDirectoryAsync(dir, { intermediates: true });
   }
+};
+
+const RecordingUploader = ({ uri, onDelete }) => {
+  const [uploading, setUploading] = useState(false);
+
+  const uploadRecording = async () => {
+    setUploading(true);
+
+    try {
+      await FileSystem.uploadAsync('http://localhost:3001/subir/grabacion', uri, {
+        httpMethod: 'POST',
+        uploadType: FileSystem.FileSystemUploadType.MULTIPART,
+        fieldName: 'file'
+      });
+
+      setUploading(false);
+      Alert.alert('Éxito', 'La grabación ha sido respaldada con éxito.');
+    } catch (error) {
+      setUploading(false);
+      Alert.alert('Error', 'Hubo un problema al respaldar la grabación. Inténtalo de nuevo.');
+    }
+  };
+
+  return (
+    <TouchableOpacity onPress={uploadRecording}>
+      <Card>
+        <View style={{ flexDirection: 'row', margin: 1, alignItems: 'center', gap: 5 }}>
+          <Text style={{ flex: 1 }}>{uri.split('/').pop()}</Text>
+          <Ionicons.Button name="cloud-upload" onPress={uploadRecording} />
+          <Ionicons.Button name="trash" onPress={() => onDelete(uri)} />
+        </View>
+      </Card>
+      {uploading && (
+        <View
+          style={[
+            StyleSheet.absoluteFill,
+            {
+              backgroundColor: 'rgba(0,0,0,0.4)',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }
+          ]}
+        >
+          <ActivityIndicator color="#fff" animating size="large" />
+        </View>
+      )}
+    </TouchableOpacity>
+  );
 };
 
 const Grabadora = () => {
@@ -21,7 +68,19 @@ const Grabadora = () => {
   const [recordings, setRecordings] = useState([]);
   const [message, setMessage] = useState('');
 
-  async function startRecording() {
+  useEffect(() => {
+    loadRecordings();
+  }, []);
+
+  const loadRecordings = async () => {
+    await ensureDirExists(recordingDir);
+    const recordingFiles = await FileSystem.readDirectoryAsync(recordingDir);
+    if (recordingFiles.length > 0) {
+      setRecordings(recordingFiles.map((f) => ({ file: recordingDir + f })));
+    }
+  };
+
+  const startRecording = async () => {
     try {
       const permission = await Audio.requestPermissionsAsync();
 
@@ -31,7 +90,7 @@ const Grabadora = () => {
           playsInSilentModeIOS: true,
         });
 
-        await ensureDirExists();
+        await ensureDirExists(recordingDir);
 
         const { recording } = await Audio.Recording.createAsync(
           Audio.RECORDING_OPTIONS_PRESET_HIGH_QUALITY
@@ -44,165 +103,66 @@ const Grabadora = () => {
     } catch (err) {
       console.error('Failed to start recording', err);
     }
-  }
+  };
 
-  async function stopRecording() {
+  const stopRecording = async () => {
     setRecording(undefined);
-    await recording.stopAndUnloadAsync();
 
-    let updatedRecordings = [...recordings];
-    const { sound, status } = await recording.createNewLoadedSoundAsync();
+    if (recording) {
+      await recording.stopAndUnloadAsync();
 
-    const filename = new Date().getTime() + '.mp3';
-    const dest = recordingDir + filename;
+      let updatedRecordings = [...recordings];
+      const { sound, status } = await recording.createNewLoadedSoundAsync();
 
-    await FileSystem.moveAsync({
-      from: recording.getURI(),
-      to: dest,
-    });
+      const filename = new Date().getTime() + '.mp3';
+      const dest = recordingDir + filename;
 
-    updatedRecordings.push({
-      sound: sound,
-      duration: getDurationFormatted(status.durationMillis),
-      file: dest,
-      format: 'mp3',
-    });
-
-    setRecordings(updatedRecordings);
-
-    // Transcribe and upload the recording
-    await transcribeAndUpload(dest);
-  }
-
-  async function transcribeRecording(uri) {
-    try {
-      const googleCloudAPIKey = process.env.EXPO_PUBLIC_MAPS_KEY_API;
-      const response = await fetch(
-        `https://speech.googleapis.com/v1/speech:recognize?key=${googleCloudAPIKey}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            audio: {
-              content: await FileSystem.readAsStringAsync(uri, {
-                encoding: FileSystem.EncodingType.Base64,
-              }),
-            },
-            config: {
-              encoding: 'LINEAR16',
-              sampleRateHertz: 16000,
-              languageCode: 'en-US',
-            },
-          }),
-        }
-      );
-
-      const result = await response.json();
-      const transcription = result.results
-        ? result.results[0].alternatives[0].transcript
-        : 'Transcription no disponible';
-
-      setMessage(`Transcription: ${transcription}`);
-    } catch (error) {
-      console.error('Error transcribing recording', error);
-      setMessage('Fallo al transcribir, intente nuevamente');
-    }
-  }
-
-  async function uploadRecording(uri) {
-    try {
-      const formData = new FormData();
-      formData.append('file', {
-        uri,
-        name: 'recording.mp3',
-        type: 'audio/mp3',
+      await FileSystem.moveAsync({
+        from: recording.getURI(),
+        to: dest,
       });
 
-      const response = await fetch('http://localhost:3001/subir/grabacion', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+      updatedRecordings.push({
+        sound: sound,
+        duration: getDurationFormatted(status.durationMillis),
+        file: dest,
+        format: 'mp3',
       });
 
-      const result = await response.json();
-      console.log(result);
-
-      setMessage('Recording uploaded successfully!');
-    } catch (error) {
-      console.error('Error uploading recording', error);
-      setMessage('Fallo al subir, intente nuevamente');
+      setRecordings(updatedRecordings);
     }
-  }
+  };
 
-  async function transcribeAndUpload(uri) {
-    await transcribeRecording(uri);
-    await uploadRecording(uri);
-  }
+  const deleteRecording = async (uri) => {
+    await FileSystem.deleteAsync(uri);
+    setRecordings(recordings.filter((rec) => rec.file !== uri));
+  };
 
-  function getDurationFormatted(millis) {
+  const getDurationFormatted = (millis) => {
     const minutes = millis / 1000 / 60;
     const minutesDisplay = Math.floor(minutes);
     const seconds = Math.round((minutes - minutesDisplay) * 60);
     const secondsDisplay = seconds < 10 ? `0${seconds}` : seconds;
     return `${minutesDisplay}:${secondsDisplay}`;
-  }
-
-  function getRecordingLines() {
-    return recordings.map((recordingLine, index) => (
-        <Card>
-        <View key={index} style={styles.row}>
-          <Text style={styles.fill}>
-            Recording {index + 1} - {recordingLine.duration}
-          </Text>
-          <View>
-            <Button
-              style={styles.button}
-              onPress={() => recordingLine.sound.replayAsync()}
-              title="Reproducir"
-            ></Button>
-            <Button
-              style={styles.button}
-              onPress={() => uploadRecording(recordingLine.file)}
-              title="Subir"
-            ></Button>
-            <Button
-              style={styles.button}
-              onPress={() => transcribeRecording(recordingLine.file)}
-              title="Transcribir"
-            ></Button>
-            <Button
-              style={styles.button}
-              onPress={() => Sharing.shareAsync(recordingLine.file)}
-              title="Compartir"
-            ></Button>
-          </View>
-        </View>
-        </Card>
-    ));
-  }
-  
-
+  };
 
   return (
     <View style={styles.container}>
       <View>
-      <View style={{ height: 120 }}></View>
-        <Text style={{color: '#fff'}}>{message}</Text>
+        <View style={{ height: 120 }}></View>
+        <Text style={{ color: '#fff' }}>{message}</Text>
         <Button
           title={recording ? 'Detener grabación' : 'Comenzar a grabar'}
           onPress={recording ? stopRecording : startRecording}
         />
         <ScrollView>
-        {getRecordingLines()}
+          {recordings.map((recordingLine, index) => (
+            <RecordingUploader key={index} uri={recordingLine.file} onDelete={deleteRecording} />
+          ))}
         </ScrollView>
         <StatusBar style="auto" />
       </View>
       <View style={{ height: 80 }}></View>
-      <BottomBar />
     </View>
   );
 };
@@ -215,17 +175,5 @@ const styles = StyleSheet.create({
     backgroundColor: '#033542',
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  fill: {
-    flex: 1,
-    margin: 16,
-  },
-  button: {
-    margin: 16,
   },
 });

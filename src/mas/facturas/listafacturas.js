@@ -67,7 +67,7 @@ export default function ListaBoletas() {
 
   const saveImage = async (uri) => {
     await ensureDirExists()
-    const filename = new Date().toLocaleDateString() + '.jpeg'
+    const filename ='factura ' + new Date().getTime() + '.jpeg'
     const dest = imgDir + filename
     await FileSystem.copyAsync({ from: uri, to: dest })
     setImages([...images, dest])
