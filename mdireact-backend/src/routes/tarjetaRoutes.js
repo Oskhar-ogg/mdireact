@@ -50,7 +50,7 @@ router.get("/tarjeta/montoMes", getMontoMes);
 
 
 
-router.get("/tarjeta/gastoMesFacturas", getGastoMesFacturas);
+router.get("/tarjeta/gastomesfacturas", getGastoMesFacturas);
 
 /**
  * @swagger
@@ -63,6 +63,6 @@ router.get("/tarjeta/gastoMesFacturas", getGastoMesFacturas);
  *          description: OK
  */
 
-router.get("/tarjeta/gastoMesBoletas", getGastoMesBoletas);
+router.get("/tarjeta/gastomesboletas", getGastoMesBoletas);
 
 module.exports = router;

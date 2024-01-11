@@ -73,7 +73,7 @@ const styles = {
     },
 
     TextCardBottom2: {
-        color: 'red',
+        color: 'orange',
         fontSize: 22,
         fontWeight: 'bold',
         textAlign: 'center',
@@ -82,13 +82,14 @@ const styles = {
 
       textContainer: {
         position: 'relative',
-        bottom: -30,
+        bottom: '0%',
         left: 0,
         right: 0,
-        padding: 8,
+        padding: 35,
+        alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
-        zIndex: 5, 
+        borderRadius: 10,
       },
       
       bottomBar: {
@@ -181,11 +182,6 @@ const styles = {
         margin: 10,
       },
 
-    map: {
-        width: '100%',
-        height: '100%',
-      },
-      
     OptionsContainer: {
         flex: 1,
         width: screenWidth * 1,

@@ -32,6 +32,7 @@ exports.getGastoMesFacturas = async (req, res) => {
     try {
         const pool = conexiondb();
         const [rows] = await pool.query('SELECT * FROM Gastomesfacturas ')
+        console.log(rows)
         res.json(rows);
     }
     catch (error) {
@@ -44,6 +45,7 @@ exports.getGastoMesBoletas = async (req, res) => {
     try {
         const pool = conexiondb();
         const [rows] = await pool.query('SELECT * FROM Gastomesboletas ')
+        console.log(rows)
         res.json(rows);
     }
     catch (error) {

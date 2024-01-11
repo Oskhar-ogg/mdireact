@@ -9,7 +9,6 @@ export const MontoMesBitacora = async () => {
           throw new Error(`Error al obtener el monto del mes: ${res.statusText}`)
       }
       const data = await res.json()
-
       // Verificar si data es null y asignar 0 si es el caso
       const montoMes = data ? data : 0
       return montoMes
@@ -21,13 +20,57 @@ export const MontoMesBitacora = async () => {
 
 export const MontoBitacora = async () => {
   try {
-    const res = await fetch(`${API}/tarjeta/montoTotal`) // Cambio en la URL
-    return await res.json()
+    const res = await fetch(`${API}/tarjeta/montoTotal`)
+    if (!res.ok) {
+      throw new Error(`Error al obtener el monto total: ${res.statusText}`)
+    }
+    const data = await res.json()
+    // Verificar si data es null y asignar 0 si es el caso
+    const montoTotal = data ? data : 0
+    return montoTotal
   } catch (error) {
     console.error(error)
     throw new Error('Failed to fetch total bitacora amount') // Actualiza el mensaje de error
   }
 }
+
+export const gastoMesBoletasApi = async () => {  // Cambiado el nombre de la función
+  try {
+    const res = await fetch(`${API}/tarjeta/gastomesboletas`)
+    if (!res.ok) {
+      throw new Error(`Error al obtener el monto total: ${res.statusText}`)
+    }
+    const data = await res.json()
+    // Verificar si data es un array y obtener el primer elemento
+    const firstElement = Array.isArray(data) ? data[0] : null
+    // Obtener el valor de "Gasto_mes_boletas" o asignar 0 si es nulo
+    const Gastoboletas = firstElement ? firstElement.Gasto_mes_boletas : 0
+    return Gastoboletas
+  } catch (error) {
+    console.error(error)
+    throw new Error('Failed to fetch total boletas amount')
+  }
+}
+
+export const gastoMesFacturasApi = async () => {
+  try {
+    const res = await fetch(`${API}/tarjeta/gastomesfacturas`);
+    if (!res.ok) {
+      throw new Error(`Error al obtener el monto total: ${res.statusText}`);
+    }
+    const data = await res.json();
+    // Verificar si data es un array y obtener el primer elemento
+    const firstElement = Array.isArray(data) ? data[0] : null;
+    // Obtener el valor de "Gasto_mes_facturas" o asignar 0 si es nulo
+    const Gastofacturas = firstElement ? firstElement.Gasto_mes_facturas : 0;
+    return Gastofacturas;
+  } catch (error) {
+    console.error(error);
+    throw new Error('Failed to fetch total facturas amount');
+  }
+};
+
+
 //
 // SECTOR TÉCNICO
 export const getTecnico = async () => {
