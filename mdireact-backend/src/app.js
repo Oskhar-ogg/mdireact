@@ -5,17 +5,18 @@ const morgan = require('morgan');
 const swaggerJSDoc = require('swagger-jsdoc');
 const swaggerUI = require('swagger-ui-express');
 const { swaggerOptions } = require('./config/swaggerOptions.js');
+const { conexiondb } = require('./libs/db_connect');
 const path = require('path');
 const helmet = require('helmet');
 const agendaRoutes = require('./routes/agendaRoutes');
 const bitacoraRoutes = require('./routes/bitacoraRoutes');
+const boletasRoutes = require('./routes/boletasRoutes');
 const inventarioRoutes = require('./routes/inventarioRoutes');
+const facturasRoutes = require('./routes/facturasRoutes');
 const tecnicoRoutes = require('./routes/tecnicoRoutes');
 const tarjetaRoutes = require('./routes/tarjetaRoutes');
 const clientesRoutes = require('./routes/clientesRoutes');
 const mantenimientoRoutes = require('./routes/mantenimientoRoutes');
-const boletasRoutes = require('./routes/boletasRoutes');
-const facturasRoutes = require('./routes/facturasRoutes');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 const z = require('zod');
@@ -50,8 +51,6 @@ app.use(mantenimientoRoutes);
 
 const storage = multer.memoryStorage(); 
 const upload = multer({ storage: storage });
-const uploadb = require("./middlewares/subir_boleta");
-const uploadf = require("./middlewares/subir_factura");
 
 app.post('/subir/bitacora', upload.single('file'), (req, res) => {
     if (!req.file) {
@@ -60,21 +59,52 @@ app.post('/subir/bitacora', upload.single('file'), (req, res) => {
     res.status(201).send('File uploaded successfully');
 });
 
-app.post('/subir/boleta', uploadb.single('file'), (req, res) => {
-    if (!req.file) {
-        return res.status(400).send('No file uploaded.');
-    }
-    res.status(201).send('File uploaded successfully');
-});
+/*app.post('/subir/boleta', uploadb.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
 
-app.post('/subir/factura', uploadf.single('file'), (req, res) => {
-    // Check if a file was provided
-    if (!req.file) {
-        return res.status(400).send('No file uploaded.');
+  const pool = conexiondb();
+  const amount = req.body.amount; // Accede al valor de "amount" desde FormData
+  const filename = req.file.filename; // Accede al nombre del archivo
+  const filePath = req.file.path; // Accede al path del archivo
+
+  const sql = 'INSERT INTO boletas (boletas_fecha, boletas_imageURL, boletas_valor, tecnico_id) VALUES (NOW(), ?, ?, ?)';
+  const values = [filename, amount, 1]; // Asigna los valores para la consulta SQL
+
+  pool.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Error al insertar en la base de datos:', err);
+      return res.status(500).send('Error al insertar en la base de datos.');
     }
-    res.status(201).send('File uploaded successfully');
-}
-);
+
+    res.status(201).send('File and amount uploaded successfully');
+  });
+}); */
+
+
+/*app.post('/subir/factura', uploadf.single('file'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  const pool = conexiondb();
+  const amount = req.body.amount; // Accede al valor de "amount" desde FormData
+  const filename = req.file.filename; // Accede al nombre del archivo
+  const filePath = req.file.path; // Accede al path del archivo
+
+  const sql = 'INSERT INTO facturas (facturas_fecha, facturas_imageURL, facturas_valor, tecnico_id) VALUES (NOW(), ?, ?, ?)';
+  const values = [filename, amount, 1]; // Asigna los valores para la consulta SQL
+
+  pool.query(sql, values, (err, result) => {
+    if (err) {
+      console.error('Error al insertar en la base de datos:', err);
+      return res.status(500).send('Error al insertar en la base de datos.');
+    }
+
+    res.status(201).send('File and amount uploaded successfully');
+  });
+});
 
 app.post('/subir/grabacion', upload.single('file'), (req, res) => {
   const fileBuffer = req.file.buffer;
@@ -88,7 +118,7 @@ app.use((err, req, res, next) => {
         next(err);
     }
 });
-
++*/
 app.use('/docs/', swaggerUI.serve, swaggerUI.setup(specs));
 
 const indexPath = path.join(__dirname, 'index.html');

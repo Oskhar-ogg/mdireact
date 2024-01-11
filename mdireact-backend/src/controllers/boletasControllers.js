@@ -2,43 +2,24 @@ const { conexiondb } = require('../libs/db_connect');
 const upload = require('../middlewares/subir_boleta');
 
 exports.saveBoleta = async (req, res) => {
-    const connection = conexiondb(); // Assuming conexiondb returns a MySQL connection
+    console.log('Guardando la boleta...', req.file, req.body.amount);
+    const pool = conexiondb();
+    const amount = req.body.amount; // Accede al valor de "amount" desde FormData
+    const filename = req.file.filename; // Accede al nombre del archivo
+    const filePath = req.file.path; // Accede al path del archivo
 
-    try {
-        await connection.beginTransaction();
+    const sql = 'INSERT INTO boletas (boletas_fecha, boletas_imageURL, boletas_valor, tecnico_id) VALUES (NOW(), ?, ?, ?)';
+    const values = [filename, amount, 1]; // Asigna los valores para la consulta SQL
 
-        upload.fields(req, res, async (err) => {
-            if (err) {
-                console.error('Error uploading file:', err);
-                await connection.rollback();
-                return res.status(500).json({ error: 'Error al subir la boleta' });
-            }
-
-            const imageUrl = req.file.path;
-            const { monto, fecha } = req.body;
-
-            const query = `INSERT INTO boletas (boletas_fecha, boletas_imageURL, boletas_valor, tecnico_id) VALUES (?, ?, ?, 1)`;
-            const values = [fecha, imageUrl, monto];
-
-            try {
-                await connection.query(query, values);
-                await connection.commit();
-                res.status(200).json({ message: 'Boleta subida exitosamente' });
-            } catch (error) {
-                console.error('Error executing query:', error);
-                await connection.rollback();
-                res.status(500).json({ error: 'Error al subir la boleta' });
-            } finally {
-                connection.end(); 
-            }
-        });
-    } catch (error) {
-        console.error('Error in saveBoleta:', error);
-        res.status(500).json({ error: 'Error al subir la boleta' });
-    }
+    pool.query(sql, values, (err, result) => {
+        if (err) {
+            console.error('Error al insertar en la base de datos:', err);
+            return res.status(500).json({ error: 'Error al insertar en la base de datos.' });
+        }
+        res.status(200).json({ message: 'Imagen y monto subidos correctamente a la base de datos' });
+    });
+    res.status(201).send('Imagen y monto subidos correctamente a la base de datos');
 };
-
-
 
 exports.getBoleta = async (req, res) => {
     try {

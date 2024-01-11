@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const upload = require("../middlewares/subir_factura");
-const { getFactura, saveFactura, deleteFactura } = require("../controllers/facturasControllers");
+const { getFactura, saveFactura} = require("../controllers/facturasControllers");
 
 /**
  * @swagger
@@ -34,6 +34,11 @@ router.get("/facturas", getFactura);
  *      200:
  *        description: OK
  */
-router.post("/facturas", upload.single("img"), saveFactura);
+router.post("/facturas", upload.single("file"), saveFactura, (req, res) =>{
+    if (!req.file) {
+        return res.status(400).send('No file uploaded.');
+    }
+    res.status(201).send('File uploaded successfully');
+});
 
 module.exports = router;
