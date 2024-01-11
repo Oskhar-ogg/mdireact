@@ -2,6 +2,8 @@
 
 Aplicación para dispositivos móviles Android desarrollada para la pyme MDI Biobío de la comuna de Talcahuano
 ![](https://raw.githubusercontent.com/expo/expo/main/.github/resources/banner.png)
+
+
 Los archivos se encuentran en el branch "APK"
 ## **Software stack**
 El proyecto "MDIREACT" es una aplicación móvil que corre sobre el siguiente software:
