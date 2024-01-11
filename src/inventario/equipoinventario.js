@@ -80,7 +80,7 @@ const EquipoInventario = () => {
 
   const handleBorrarRepuesto = async () => {
     try {
-      const { inv_equipo_id } = inventarioData
+      const { inv_equipo_id } = selectedItem
       await deleteInventarioEquipo(inv_equipo_id)
       setVisibleEditarModal(false)
       fetchData() // Refrescar los datos después de borrar un repuesto

@@ -81,7 +81,7 @@ const RedaguaInventario = () => {
 
   const handleBorrarRepuesto = async () => {
     try {
-      const { inv_red_agua_id } = inventarioData
+      const { inv_red_agua_id } = selectedItem
       await deleteInventarioRedagua(inv_red_agua_id)
       setVisibleEditarModal(false)
       fetchData() // Refrescar los datos después de borrar un repuesto
@@ -198,6 +198,7 @@ const RedaguaInventario = () => {
                 <DataTable.Header style={{ textAlign: 'center' }}>
                   <DataTable.Title style={{ color: 'white' }}>Tipo de repuesto</DataTable.Title>
                   <DataTable.Title style={{ color: 'black' }}>Marca</DataTable.Title>
+                  <DataTable.Title style={{ color: 'black' }}>Ubicación</DataTable.Title>
                   <DataTable.Title numeric style={{ color: 'black' }}>
                     Cantidad
                   </DataTable.Title>
@@ -208,6 +209,7 @@ const RedaguaInventario = () => {
                     <DataTable.Row key={item.key}>
                       <DataTable.Cell>{item.name}</DataTable.Cell>
                       <DataTable.Cell>{item.brand}</DataTable.Cell>
+                      <DataTable.Cell>{item.ubicacion}</DataTable.Cell>
                       <DataTable.Cell numeric>{item.cantidad}</DataTable.Cell>
                     </DataTable.Row>
                   </TouchableOpacity>

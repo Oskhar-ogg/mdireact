@@ -85,16 +85,18 @@ const decrementarCantidadEditar = () => {
 };
 
 
-  const handleBorrarRepuesto = async () => {
-    try {
-      const { inv_cal_id } = inventarioData
-      await deleteInventarioCaldera(inv_cal_id)
-      setVisibleEditarModal(false)
-      fetchData() // Refrescar los datos después de borrar un repuesto
-    } catch (error) {
-      console.error(error)
-    }
+const handleBorrarRepuesto = async () => {
+  try {
+    const { inv_cal_id } = selectedItem; // Obtener la ID desde selectedItem
+    console.log('Borrando repuesto con id:', inv_cal_id);
+    await deleteInventarioCaldera(inv_cal_id);
+    fetchData();
+    setVisibleEditarModal(false);
+  } catch (error) {
+    console.error(error);
   }
+};
+
 
   const handleInputChange = (key, value) => {
     setInventarioData({ ...inventarioData, [key]: value })
@@ -376,13 +378,14 @@ const decrementarCantidadEditar = () => {
                 </ScrollView>
             </Card.Content>
             <Card.Actions>
-              <Button
-                mode="contained"
-                onPress={handleEditarRepuesto}
-                style={{ backgroundColor: '#00bcd4' }}
-              >
-                Guardar Cambios
-              </Button>
+            <Button
+              mode="contained"
+              onPress={() => handleEditarRepuesto(inventarioData.inv_cal_id)}
+              style={{ backgroundColor: '#00bcd4' }}
+            >
+            Guardar Cambios
+            </Button>
+
               <Button
                 mode="outlined"
                 onPress={handleBorrarRepuesto}

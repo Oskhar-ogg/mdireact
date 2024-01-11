@@ -130,10 +130,11 @@ exports.saveInventarioRedagua = async (req, res) => {
 // BORRAR ELEMENTOS DE INVENTARIO
 
 exports.deleteInventarioCaldera = async (req, res) => {
+    console.log('Cuerpo de la Solicitud:', req.params);
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         const pool = await conexiondb();
-        const [rows] = await pool.query('DELETE FROM inventario_caldera WHERE id = ?', [id]);
+        const [rows] = await pool.query('DELETE FROM inventario_caldera WHERE inv_cal_id = ?', [id]);
         res.json({
             id: rows.insertId,
             ...req.body
@@ -142,14 +143,15 @@ exports.deleteInventarioCaldera = async (req, res) => {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
-
 }
 
+
 exports.deleteInventarioCalefont = async (req, res) => {
+    console.log('Cuerpo de la Solicitud:', req.params);
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         const pool = await conexiondb();
-        const [rows] = await pool.query('DELETE FROM inventario_calefont WHERE id = ?', [id]);
+        const [rows] = await pool.query('DELETE FROM inventario_calefont WHERE inv_calefont_id = ?', [id]);
         res.json({
             id: rows.insertId,
             ...req.body
@@ -162,10 +164,11 @@ exports.deleteInventarioCalefont = async (req, res) => {
 }
 
 exports.deleteInventarioEquipo = async (req, res) => {
+    console.log('Cuerpo de la Solicitud:', req.params);
     try {
-        const { id } = req.body;
+        const { id } = req.params; // Accede a los parámetros directamente desde req.params
         const pool = await conexiondb();
-        const [rows] = await pool.query('DELETE FROM inventario_equipo_electrico WHERE id = ?', [id]);
+        const [rows] = await pool.query('DELETE FROM inventario_equipo_electrico WHERE inv_equipo_id = ?', [id]);
         res.json({
             id: rows.insertId,
             ...req.body
@@ -174,14 +177,15 @@ exports.deleteInventarioEquipo = async (req, res) => {
         console.error(error);
         res.status(500).json({ error: "Internal Server Error" });
     }
-
 }
 
+
 exports.deleteInventarioRedgas = async (req, res) => {
+    console.log('Cuerpo de la Solicitud:', req.params);
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         const pool = await conexiondb();
-        const [rows] = await pool.query('DELETE FROM inventario_red_gas WHERE id = ?', [id]);
+        const [rows] = await pool.query('DELETE FROM inventario_red_gas WHERE inv_red_gas_id = ?', [id]);
         res.json({
             id: rows.insertId,
             ...req.body
@@ -194,10 +198,11 @@ exports.deleteInventarioRedgas = async (req, res) => {
 }   
 
 exports.deleteInventarioRedagua = async (req, res) => {
+    console.log('Cuerpo de la Solicitud:', req.params);
     try {
-        const { id } = req.body;
+        const { id } = req.params;
         const pool = await conexiondb();
-        const [rows] = await pool.query('DELETE FROM inventario_red_agua WHERE id = ?', [id]);
+        const [rows] = await pool.query('DELETE FROM inventario_red_agua WHERE inv_red_agua_id = ?', [id]);
         res.json({
             id: rows.insertId,
             ...req.body

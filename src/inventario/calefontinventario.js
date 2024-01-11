@@ -83,7 +83,7 @@ const CalefontInventario = () => {
   
   const handleBorrarRepuesto = async () => {
     try {
-      const { inv_calefont_id } = inventarioData
+      const { inv_calefont_id } = selectedItem
       await deleteInventarioCalefont(inv_calefont_id)
       setVisibleEditarModal(false)
       fetchData() // Refrescar los datos después de borrar un repuesto
