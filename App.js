@@ -48,7 +48,7 @@ import Galeriafacturas from './src/mas/facturas/galeriarf'
       <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerStyle: { backgroundColor: "#08546c"}, headerTitleStyle: { color: "#ffffff"}, headerTitleAlign: "center"}}>
-        {/*<Stack.Screen name="Login" component={Login} options={{ headerShown: false, gestureEnabled: false, gestureDirection: Login }}/>*/}
+        {<Stack.Screen name="Login" component={Login} options={{ headerShown: false, gestureEnabled: false, gestureDirection: Login }}/>}
         <Stack.Screen name="Inicio" component ={Inicio} options={({navigation}) => ({
           headerRight: () => (
             <View style ={{ flexDirection: 'row', marginRight: 15}}>
