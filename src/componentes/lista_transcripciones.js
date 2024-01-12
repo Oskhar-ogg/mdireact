@@ -1,9 +1,9 @@
-import React from "react";
-import { View, TouchableOpacity} from "react-native";
-import { Card, Text } from "@rneui/base";
-import { FontAwesome } from "@expo/vector-icons";
-import styles from "../style";
-import { FlatList } from "react-native";
+import React from "react"
+import { View, TouchableOpacity} from "react-native"
+import { Card, Text } from "@rneui/base"
+import { FontAwesome } from "@expo/vector-icons"
+import styles from "../style"
+import { FlatList } from "react-native"
 
 
 
@@ -21,4 +21,4 @@ const ListaTrascipciones= () => {
 
 }
 
-export default ListaTrascipciones;
+export default ListaTrascipciones

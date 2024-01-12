@@ -139,12 +139,12 @@ const cargarItems = async () => {
   }
 }
 useEffect(() => {
-  cargarItems();
-}, []);
+  cargarItems()
+}, [])
 
 useEffect(() => {
-  triggerNotificacion(items);
-}, [items.length]);
+  triggerNotificacion(items)
+}, [items.length])
 
   class Reservation extends PureComponent {
     render() {

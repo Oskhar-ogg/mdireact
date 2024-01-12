@@ -112,29 +112,29 @@ const GasInventario = () => {
       brand: item.brand,
       cantidad: item.cantidad,
       ubicacion: item.ubicacion,
-    });
+    })
     setInventarioData({
       inv_red_gas_tipo_repuesto: item.name,
       inv_red_gas_marca_repuesto: item.brand,
       inv_red_gas_cantidad: item.cantidad,
       inv_red_gas_ubicacion: item.ubicacion,
-    });
-    setVisibleEditarModal(true);
-  };
+    })
+    setVisibleEditarModal(true)
+  }
   
   const hideEditarModal = () => {
-    setVisibleEditarModal(false);
+    setVisibleEditarModal(false)
     setInventarioData({
       inv_red_gas_tipo_repuesto: '',
       inv_red_gas_marca_repuesto: '',
       inv_red_gas_ubicacion: '',
       inv_red_gas_cantidad: '',
-    });
-  };
+    })
+  }
   
   React.useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
   
 
   const fetchData = async () => {

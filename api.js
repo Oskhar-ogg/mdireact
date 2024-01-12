@@ -54,21 +54,21 @@ export const gastoMesBoletasApi = async () => {  // Cambiado el nombre de la fun
 
 export const gastoMesFacturasApi = async () => {
   try {
-    const res = await fetch(`${API}/tarjeta/gastomesfacturas`);
+    const res = await fetch(`${API}/tarjeta/gastomesfacturas`)
     if (!res.ok) {
-      throw new Error(`Error al obtener el monto total: ${res.statusText}`);
+      throw new Error(`Error al obtener el monto total: ${res.statusText}`)
     }
-    const data = await res.json();
+    const data = await res.json()
     // Verificar si data es un array y obtener el primer elemento
-    const firstElement = Array.isArray(data) ? data[0] : null;
+    const firstElement = Array.isArray(data) ? data[0] : null
     // Obtener el valor de "Gasto_mes_facturas" o asignar 0 si es nulo
-    const Gastofacturas = firstElement ? firstElement.Gasto_mes_facturas : 0;
-    return Gastofacturas;
+    const Gastofacturas = firstElement ? firstElement.Gasto_mes_facturas : 0
+    return Gastofacturas
   } catch (error) {
-    console.error(error);
-    throw new Error('Failed to fetch total facturas amount');
+    console.error(error)
+    throw new Error('Failed to fetch total facturas amount')
   }
-};
+}
 
 
 //
@@ -223,20 +223,20 @@ export const getBitacoraID = async (bitacora_id) => {
   }
 
   export const updateInventarioCaldera = async (inv_cal_id, inv_cal_cantidad) => {
-    console.log('Actualizar inventario caldera con id:', inv_cal_id, inv_cal_cantidad);
+    console.log('Actualizar inventario caldera con id:', inv_cal_id, inv_cal_cantidad)
     try {
       const response = await fetch(`${API}/inv_caldera/${inv_cal_id}`, {
         method: 'PATCH',
         headers: { Accept: 'application/json', 'Content-Type': 'application/json' },
         body: JSON.stringify({ inv_cal_id, inv_cal_cantidad }),
-      });
+      })
       
-      return await response.json();
+      return await response.json()
     } catch (error) {
-      console.error(error);
-      throw new Error('Failed to update inventario caldera');
+      console.error(error)
+      throw new Error('Failed to update inventario caldera')
     }
-  };
+  }
   
 
   export const getInventarioCalefont = async () => {
@@ -265,7 +265,7 @@ export const getBitacoraID = async (bitacora_id) => {
   }
 
   export const updateInventarioCalefont = async (inv_calefont_id, inv_calefont_cantidad) => {
-    console.log('Actualizar inventario calefont con id:', inv_calefont_id, inv_calefont_cantidad);
+    console.log('Actualizar inventario calefont con id:', inv_calefont_id, inv_calefont_cantidad)
     try {
       const response = await fetch(`${API}/inv_calefont/${inv_calefont_id}`, {
         method: 'PATCH',
@@ -455,27 +455,27 @@ export const getBitacoraID = async (bitacora_id) => {
 
   export const getClienteHistoricoCaldera = async (cliente_id) => {
     try {
-      const res = await fetch(`${API}/mantenimiento/caldera/${cliente_id}`);
-      const jsonRes = await res.json();
-      console.log('res:', jsonRes);
-      return jsonRes;
+      const res = await fetch(`${API}/mantenimiento/caldera/${cliente_id}`)
+      const jsonRes = await res.json()
+      console.log('res:', jsonRes)
+      return jsonRes
     } catch (error) {
-      console.error(error);
-      throw new Error('Failed to fetch historico mantenciones caldera cliente');
+      console.error(error)
+      throw new Error('Failed to fetch historico mantenciones caldera cliente')
     }
-  };
+  }
   
   export const getClienteHistoricoCalefont = async (cliente_id) => {
     try {
-      const res = await fetch(`${API}/mantenimiento/calefont/${cliente_id}`);
-      const jsonRes = await res.json();
-      console.log('res:', jsonRes);
-      return jsonRes;
+      const res = await fetch(`${API}/mantenimiento/calefont/${cliente_id}`)
+      const jsonRes = await res.json()
+      console.log('res:', jsonRes)
+      return jsonRes
     } catch (error) {
-      console.error(error);
-      throw new Error('Failed to fetch historico mantenciones calefont cliente');
+      console.error(error)
+      throw new Error('Failed to fetch historico mantenciones calefont cliente')
     }
-  };
+  }
   
   export const saveMantencionesCaldera = async (mantencionesCalderaData) => {
     try {
@@ -528,9 +528,20 @@ export const getBitacoraID = async (bitacora_id) => {
       throw new Error('Failed to save cliente')
     }
   }
-  
-  
-  
+
+ export const deleteCliente = async (cliente_id) => {
+    try {
+      console.log('Eliminar cliente con id:', cliente_id)
+      const res = await fetch(`${API}/clientes/${cliente_id}`, {
+        method: 'DELETE',
+      })
+      return await res.json()
+    } catch (error) {
+      console.error(error)
+      throw new Error(`Failed to delete cliente with id: ${cliente_id}`)
+    }
+  }
+   
   export const getMantencionesCaldera = async () => {
     try {
       const res = await fetch(`${API}/mantenciones/caldera`)

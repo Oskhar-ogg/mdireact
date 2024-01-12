@@ -31,7 +31,7 @@ export default function AgregarBitacora() {
     bitacora_valor_cobrado: '0',
     bitacora_fecha: new Date().toLocaleDateString(), // Formato yyyy-mm-dd
     tecnico_id: 1,
-  };
+  }
 
   const resetAddbitacora = () => {
     setBitacoraData(estadoInicial)
@@ -86,7 +86,7 @@ export default function AgregarBitacora() {
       const year = selectedDate.getFullYear()
       const month = String(selectedDate.getMonth() + 1).padStart(2, '0')
       const day = String(selectedDate.getDate()).padStart(2, '0')
-      const formattedDate = `${day}-${month}-${year}`
+      const formattedDate = `${day}/${month}/${year}`
       handleInputChange('bitacora_fecha', formattedDate)
     }
     hideDatePicker()

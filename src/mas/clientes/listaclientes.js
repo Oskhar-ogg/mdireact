@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { AntDesign } from '@expo/vector-icons'
 import { SafeAreaView, View, RefreshControl, FlatList, TouchableOpacity, Linking } from 'react-native'
-import { Card, Text, Button, Avatar } from 'react-native-paper' // Cambiado a React Native Paper
-import { getClientes, getClienteHistoricoCaldera, getClienteHistoricoCalefont } from '../../../api'
+import { Card, Text, Button, Avatar, IconButton } from 'react-native-paper' // Cambiado a React Native Paper
+import { getClientes, deleteCliente, getClienteHistoricoCaldera, getClienteHistoricoCalefont } from '../../../api'
 import { useNavigation, useIsFocused } from '@react-navigation/native'
 import styles from '../../style'
 import BottomBar from '../../componentes/bottombar'
@@ -56,6 +56,7 @@ export default function ListaCliente() {
 
   const [refreshing, setRefreshing] = useState(false)
   const [cliente, setCliente] = useState([])
+  const [clienteAEliminar, setClienteAEliminar] = useState(null)
   const isFocused = useIsFocused()
 
   const cargarCliente = async () => {
@@ -69,6 +70,18 @@ export default function ListaCliente() {
       console.error(error)
     }
   }
+
+  const borrarCliente = async (clienteId) => {
+    try {
+      // Lógica para eliminar el cliente con la ID proporcionada
+      await deleteCliente(clienteId);
+      // Actualizar la lista de clientes después de la eliminación
+      await cargarCliente();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
 
   const customCardTheme = {
     colors: {
@@ -91,7 +104,11 @@ export default function ListaCliente() {
     cargarCliente()
   }, [isFocused])
 
-  const CardClientes = React.memo(({ item }) => (
+  const CardClientes = React.memo(({ item }) => {
+  const handleEliminarCliente = async (clienteId) => {
+    await borrarCliente(clienteId);
+  };
+  return (
     <Card theme={customCardTheme} style={{ alignItems: 'center' }} mode='outlined'>
       <Card.Title title={'Nombre: ' + item.cliente_nombre + ' || ' + item.cliente_tipo} titleVariant='bodyLarge' />
       <Avatar.Image size={64} source={require('../../imagenes/avatar.png')} />
@@ -132,25 +149,32 @@ export default function ListaCliente() {
           Historial de servicios
         </Button>
       </Card.Actions>
+      <Card.Actions>
+        {/* Botón de eliminar */}
+        <IconButton
+          icon="delete"
+          color="#ff0000"
+          size={20}
+          onPress={() => handleEliminarCliente(item.cliente_id)}
+        />
+      </Card.Actions>
     </Card>
-  ))
-  
-  
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <FlatList
-        style={styles.FlatList}
-        data={cliente}
-        keyExtractor={(item) => item.cliente_id.toString()}
-        renderItem={({ item }) => <CardClientes item={item} />}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-        nestedScrollEnabled={true}
-      />
-      <View style={{ height: 20 }}></View>
-      <BottomBar />
-    </SafeAreaView>
-  )
+  );
+});
+return (
+  <SafeAreaView style={styles.container}>
+    <FlatList
+      style={styles.FlatList}
+      data={cliente}
+      keyExtractor={(item) => item.cliente_id.toString()}
+      renderItem={({ item }) => <CardClientes item={item} />}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+      nestedScrollEnabled={true}
+    />
+    <View style={{ height: 20 }}></View>
+    <BottomBar />
+  </SafeAreaView>
+);
 }

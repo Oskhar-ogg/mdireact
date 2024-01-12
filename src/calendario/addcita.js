@@ -67,16 +67,28 @@ const handleDateConfirm = (event, selectedDate) => {
     setTimePickerVisible(false)
     }
 
-     const handleAgregarCita = () => {
-        try{
-            saveAgenda(citaData)
-            navigation.navigate('Agenda')
-            Calendario.cargarItems()
+    const handleAgregarCita = () => {
+      try {
+        // Verificar errores antes de guardar la cita
+        if (
+          !citaData.agenda_cliente ||
+          !citaData.agenda_direccion ||
+          !citaData.agenda_comuna ||
+          !citaData.agenda_motivo
+        ) {
+          console.error("Faltan campos obligatorios 🚫🚫");
+          return;
         }
-        catch(error){
-            console.error("Error al agregar la cita en la agenda 🚫🚫")
-        }
-     }
+    
+        // Guardar la cita
+        saveAgenda(citaData);
+        navigation.navigate('Agenda');
+        Calendario.cargarItems();
+      } catch (error) {
+        console.error("Error al agregar la cita en la agenda 🚫🚫", error);
+      }
+    };
+    
 
     return(
         <View style={styles.container}>

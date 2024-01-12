@@ -14,7 +14,6 @@ export default function ListaMas() {
     'Boletas',
     'Facturas',
     'Clientes',
-    'Mantenciones Realizadas',
     'Opciones',
   ];
 

@@ -27,59 +27,59 @@ const CalefontInventario = () => {
       const response = await saveInventarioCalefont({
         ...inventarioData,
         inv_calefont_cantidad: parseInt(inventarioData.inv_calefont_cantidad, 10),
-      });
+      })
   
       setInventarioData({
         inv_calefont_tipo_repuesto: '',
         inv_calefont_marca_repuesto: '',
         inv_calefont_ubicacion: '',
         inv_calefont_cantidad: 0,
-      });
-      setVisibleAgregarModal(false);
-      fetchData(); // Refrescar los datos después de agregar un repuesto
+      })
+      setVisibleAgregarModal(false)
+      fetchData() // Refrescar los datos después de agregar un repuesto
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
   
   const handleEditarRepuesto = async () => {
     try {
-      const { inv_calefont_cantidad } = inventarioData;
-      const { inv_calefont_id } = selectedItem;
+      const { inv_calefont_cantidad } = inventarioData
+      const { inv_calefont_id } = selectedItem
   
       const response = await updateInventarioCalefont(
         inv_calefont_id,
         parseInt(inv_calefont_cantidad, 10)
-      );
+      )
   
       setInventarioData({
         inv_calefont_tipo_repuesto: '',
         inv_calefont_marca_repuesto: '',
         inv_calefont_ubicacion: '',
         inv_calefont_cantidad: '',
-      });
+      })
   
-      setVisibleEditarModal(false);
-      fetchData(); // Refrescar los datos después de editar un repuesto
+      setVisibleEditarModal(false)
+      fetchData() // Refrescar los datos después de editar un repuesto
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
   
   const incrementarCantidadEditar = () => {
     setInventarioData((prevData) => ({
       ...prevData,
       inv_calefont_cantidad: (parseInt(prevData.inv_calefont_cantidad, 10) + 1).toString(),
-    }));
-  };
+    }))
+  }
   
   const decrementarCantidadEditar = () => {
     setInventarioData((prevData) => {
-      const cantidad = parseInt(prevData.inv_calefont_cantidad, 10);
-      const nuevaCantidad = cantidad > 0 ? (cantidad - 1).toString() : '0';
-      return { ...prevData, inv_calefont_cantidad: nuevaCantidad };
-    });
-  };
+      const cantidad = parseInt(prevData.inv_calefont_cantidad, 10)
+      const nuevaCantidad = cantidad > 0 ? (cantidad - 1).toString() : '0'
+      return { ...prevData, inv_calefont_cantidad: nuevaCantidad }
+    })
+  }
   
   const handleBorrarRepuesto = async () => {
     try {
@@ -113,15 +113,15 @@ const CalefontInventario = () => {
         brand: item.brand,
         cantidad: item.cantidad,
         ubicacion: item.ubicacion,
-      });
+      })
       setInventarioData({
         inv_calefont_tipo_repuesto: item.name,
         inv_calefont_marca_repuesto: item.brand,
         inv_calefont_cantidad: item.cantidad,
         inv_calefont_ubicacion: item.ubicacion,
-      });
-      setVisibleEditarModal(true);
-    };
+      })
+      setVisibleEditarModal(true)
+    }
 
   const hideEditarModal = () => { setVisibleEditarModal(false)
   setInventarioData({

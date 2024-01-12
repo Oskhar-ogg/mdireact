@@ -16,7 +16,7 @@ exports.getBitacora = async (req, res) => {
     try {
       console.log(req.body); // Agregar esta línea para verificar los datos recibidos
       const connect = conexiondb();
-      const fechaParts = req.body.bitacora_fecha.split('-'); // Suponiendo que el formato original es 'DD/MM/YYYY'
+      const fechaParts = req.body.bitacora_fecha.split('/'); // Suponiendo que el formato original es 'DD/MM/YYYY'
       const formattedFecha = `${fechaParts[2]}-${fechaParts[1]}-${fechaParts[0]}`;
       req.body.bitacora_fecha = formattedFecha;
       const [results] = await connect.query(

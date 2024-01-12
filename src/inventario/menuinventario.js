@@ -119,6 +119,7 @@ export default function MenuInventario () {
             </TouchableOpacity>
         </ScrollView>
         </View>
+        <View style={{height: 60}}></View>
         <BottomBar styles = {styles.bottomBar}/>
     </View>)
 }

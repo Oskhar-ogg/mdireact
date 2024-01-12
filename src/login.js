@@ -1,16 +1,14 @@
-import React, { useState } from "react";
-import { View, SafeAreaView, ImageBackground, TouchableOpacity, Alert, TextInput, Dimensions, KeyboardAvoidingView, Platform } from "react-native";
-import { Card, Text, Button, Icon } from "@rneui/base"; // Asegúrate de tener el Icon importado
-import { useNavigation } from '@react-navigation/native';
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
-import { initializeApp } from 'firebase/app';
-import 'firebase/compat/auth';
-import 'firebase/compat/storage';
-import 'firebase/compat/firestore';
+import React, { useState } from "react"
+import { View, ImageBackground, TouchableOpacity, Alert, TextInput, Dimensions, KeyboardAvoidingView, Platform } from "react-native"
+import { Card, Text, Button, Icon } from "@rneui/base"
+import { useNavigation } from '@react-navigation/native'
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { initializeApp } from 'firebase/app'
+import { initializeAuth, getReactNativePersistence } from 'firebase/auth'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
-import styles from "./style";
+import styles from "./style"
 
-// Configura tu objeto de configuración de Firebase
 const firebaseConfig = {
   apiKey: process.env.EXPO_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -19,35 +17,37 @@ const firebaseConfig = {
   messagingSenderId: process.env.EXPO_PUBLIC_FIREBASE_SENDER_ID,
   appId: process.env.EXPO_PUBLIC_FIREBASE_APP_ID,
   measurementId: "G-F1B0H7KPQR"
-};
+}
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+const app = initializeApp(firebaseConfig)
+const auth = initializeAuth(app, {
+  persistence: getReactNativePersistence(AsyncStorage),
+})
 
 export default function Login() {
-  const [email, setEmail] = useState("");
-  const [contraseña, setContraseña] = useState("");
-  const [mostrarContraseña, setMostrarContraseña] = useState(false); // Nuevo estado para controlar la visibilidad de la contraseña
-  const navigation = useNavigation();
+  const [email, setEmail] = useState("")
+  const [contraseña, setContraseña] = useState("")
+  const [mostrarContraseña, setMostrarContraseña] = useState(false)
+  const navigation = useNavigation()
 
   const handleSignIn = () => {
     signInWithEmailAndPassword(auth, email, contraseña)
       .then((userCredential) => {
-        console.info("Ingreso exitoso");
-        const user = userCredential.user;
-        navigation.navigate('Inicio');
-        setEmail("");
-        setContraseña("");
+        console.info("Ingreso exitoso")
+        const user = userCredential.user
+        navigation.navigate('Inicio')
+        setEmail("")
+        setContraseña("")
       })
       .catch(error => {
-        let errorMessage = "Error al pasar la autenticación. Revisa las credenciales e intenta nuevamente.";
+        let errorMessage = "Error al pasar la autenticación. Revisa las credenciales e intenta nuevamente."
         if (error.code === "auth/user-not-found" || error.code === "auth/invalid-email") {
-          errorMessage = "Usuario no encontrado o formato de correo electrónico inválido.";
+          errorMessage = "Usuario no encontrado o formato de correo electrónico inválido."
         } else if (error.code === "auth/wrong-password") {
-          errorMessage = "Contraseña incorrecta. Verifica la contraseña e intenta nuevamente.";
+          errorMessage = "Contraseña incorrecta. Verifica la contraseña e intenta nuevamente."
         }
-        Alert.alert("Error", errorMessage);
-      });
+        Alert.alert("Error", errorMessage)
+      })
   }
 
   return (
@@ -86,12 +86,12 @@ export default function Login() {
                   value={contraseña}
                   onChangeText={(text) => setContraseña(text)}
                   placeholder='*********'
-                  secureTextEntry={!mostrarContraseña} // Utiliza el estado para determinar si la contraseña debe ocultarse o mostrarse
+                  secureTextEntry={!mostrarContraseña}
                   textContentType="password"
                   leftIcon={{ type: 'MaterialIcons', name: 'lock' }}
                 />
                 <TouchableOpacity onPress={() => setMostrarContraseña(!mostrarContraseña)}>
-                  <Icon name={mostrarContraseña ? 'visibility-off' : 'visibility'} /> 
+                  <Icon name={mostrarContraseña ? 'visibility-off' : 'visibility'} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -103,5 +103,5 @@ export default function Login() {
         </View>
       </KeyboardAvoidingView>
     </View>
-  );
+  )
 }

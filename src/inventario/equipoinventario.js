@@ -116,29 +116,29 @@ const EquipoInventario = () => {
       brand: item.brand,
       cantidad: item.cantidad,
       ubicacion: item.ubicacion,
-    });
+    })
     setInventarioData({
       inv_equipo_tipo_repuesto: item.name,
       inv_equipo_marca_repuesto: item.brand,
       inv_equipo_cantidad: item.cantidad,
       inv_equipo_ubicacion: item.ubicacion,
-    });
-    setVisibleEditarModal(true);
-  };
+    })
+    setVisibleEditarModal(true)
+  }
   
   const hideEditarModal = () => {
-    setVisibleEditarModal(false);
+    setVisibleEditarModal(false)
     setInventarioData({
       inv_equipo_tipo_repuesto: '',
       inv_equipo_marca_repuesto: '',
       inv_equipo_ubicacion: '',
       inv_equipo_cantidad: '',
-    });
-  };
+    })
+  }
   
   React.useEffect(() => {
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
   
 
   const fetchData = async () => {

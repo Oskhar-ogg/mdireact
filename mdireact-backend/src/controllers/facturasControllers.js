@@ -23,14 +23,23 @@ exports.saveFactura = (req, res) => {
     res.status(201).send('Imagen y monto subidos correctamente a la base de datos');
 };
 
-exports.getFactura = (req, res) => {
+exports.getFactura = async (req, res) => {
     const pool = conexiondb();
-    pool.query('SELECT * FROM facturas', (err, result) => {
-        if (err) {
-            console.error('Error al obtener las facturas:', err);
-            return res.status(500).send('Error al obtener las facturas.');
-        }
-        res.status(200).json(result);
-    });
-}
-   
+
+    try {
+        const sql = 'SELECT * FROM facturas';
+        
+        const result = await pool.query(sql);
+
+        const facturas = result[0].map(factura => ({
+            imageURL: `http://146.83.194.142:1414/uploads/facturas/${factura.facturas_imageURL}`, 
+            valor: factura.facturas_valor,
+            fecha: factura.facturas_fecha
+        }));
+
+        res.status(200).json(facturas);
+    } catch (error) {
+        console.error('Error al obtener las facturas:', error);
+        res.status(500).send('Error al obtener las facturas.');
+    }
+};

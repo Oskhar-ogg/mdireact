@@ -25,16 +25,12 @@ exports.saveCliente = async (req, res) => {
     } 
 
 
-// DELETE cliente
-exports.deleteCliente = (req, res) => {
-    const { id } = req.params;
-    const query = 'DELETE FROM cliente WHERE id = ?';
-    conexiondb.query(query, [id], (error, result) => {
-        if (error) {
-            console.error(error);
-            res.status(500).json({ message: 'Error al eliminar el cliente' });
-        } else {
-            res.status(200).json({ message: 'Cliente eliminado correctamente' });
-        }
-    });
-};
+    exports.deleteCliente =  async (req, res) => {
+        console.log('DELETE cliente', req.params);
+        const pool = conexiondb();
+        const { id } = req.params;
+        const borrarcliente = await pool.query('DELETE FROM `cliente` WHERE `cliente`.`cliente_id` = ?', [id]);
+        res.json({message: 'Cliente eliminado correctamente'});
+    }
+    
+       

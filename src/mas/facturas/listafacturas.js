@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Image,
@@ -12,62 +12,62 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
-} from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import * as FileSystem from 'expo-file-system';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import BottomBar from '../../componentes/bottombar';
-import { Card } from '@rneui/base';
+} from 'react-native'
+import * as ImagePicker from 'expo-image-picker'
+import * as FileSystem from 'expo-file-system'
+import Ionicons from '@expo/vector-icons/Ionicons'
+import BottomBar from '../../componentes/bottombar'
+import { Card } from '@rneui/base'
 
-const imgDir = FileSystem.documentDirectory + 'imagenes/facturas/';
+const imgDir = FileSystem.documentDirectory + 'imagenes/facturas/'
 
 const ensureDirExists = async () => {
-  const dirInfo = await FileSystem.getInfoAsync(imgDir);
+  const dirInfo = await FileSystem.getInfoAsync(imgDir)
   if (!dirInfo.exists) {
-    await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true });
+    await FileSystem.makeDirectoryAsync(imgDir, { intermediates: true })
   }
-};
+}
 
 export default function ListaBoletas() {
-  const [uploading, setUploading] = useState(false);
-  const [images, setImages] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isModalVisibleView, setIsModalVisibleView] = useState(false);
-  const [invoiceAmount, setInvoiceAmount] = useState('');
+  const [uploading, setUploading] = useState(false)
+  const [images, setImages] = useState([])
+  const [selectedImage, setSelectedImage] = useState(null)
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [isModalVisibleView, setIsModalVisibleView] = useState(false)
+  const [invoiceAmount, setInvoiceAmount] = useState('')
 
   useEffect(() => {
-    loadImages();
-  }, []);
+    loadImages()
+  }, [])
 
   const loadImages = async () => {
-    await ensureDirExists();
-    const files = await FileSystem.readDirectoryAsync(imgDir);
+    await ensureDirExists()
+    const files = await FileSystem.readDirectoryAsync(imgDir)
     if (files.length > 0) {
-      setImages(files.map((f) => imgDir + f));
+      setImages(files.map((f) => imgDir + f))
     }
-  };
+  }
 
   const selectImage = async (useLibrary) => {
-    let result;
+    let result
     const options = {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: false,
       aspect: [4, 3],
       quality: 1,
-    };
+    }
 
     if (useLibrary) {
-      result = await ImagePicker.launchImageLibraryAsync(options);
+      result = await ImagePicker.launchImageLibraryAsync(options)
     } else {
-      await ImagePicker.requestCameraPermissionsAsync();
-      result = await ImagePicker.launchCameraAsync(options);
+      await ImagePicker.requestCameraPermissionsAsync()
+      result = await ImagePicker.launchCameraAsync(options)
     }
 
     if (!result.canceled) {
-      saveImage(result.assets[0].uri);
+      saveImage(result.assets[0].uri)
     }
-  };
+  }
 
   const saveImage = async (uri) => {
     await ensureDirExists()
@@ -78,37 +78,37 @@ export default function ListaBoletas() {
   }
 
   const openAmountModal = (image) => {
-    setSelectedImage(image);
-    setIsModalVisible(true);
-  };
+    setSelectedImage(image)
+    setIsModalVisible(true)
+  }
 
   const closeAmountModal = () => {
-    setIsModalVisible(false);
-    setInvoiceAmount('');
-  };
+    setIsModalVisible(false)
+    setInvoiceAmount('')
+  }
 
   const openViewModal = (image) => {
-    setSelectedImage(image);
-    setIsModalVisibleView(true);
+    setSelectedImage(image)
+    setIsModalVisibleView(true)
   }
 
   const closeViewModal = () => {
-    setIsModalVisibleView(false);
+    setIsModalVisibleView(false)
   }
 
   const sendData = async () => {
-    setUploading(true);
+    setUploading(true)
   
     try {
-      const formData = new FormData();
+      const formData = new FormData()
       formData.append('file', {
         uri: selectedImage,
         name: 'image.jpg',
         type: 'image/jpeg',
-      });
-      formData.append('amount', invoiceAmount);
+      })
+      formData.append('amount', invoiceAmount)
   
-      console.log('Sending formData:', formData);
+      console.log('Sending formData:', formData)
   
       const response = await fetch('http://146.83.194.142:1414/facturas', {
         method: 'POST',
@@ -116,30 +116,30 @@ export default function ListaBoletas() {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
-      });
-      setUploading(false);
-      setInvoiceAmount('');
-      setSelectedImage(null);
-      closeAmountModal();
-      Alert.alert('Éxito', 'La imagen y el monto han sido enviados con éxito.');
+      })
+      setUploading(false)
+      setInvoiceAmount('')
+      setSelectedImage(null)
+      closeAmountModal()
+      Alert.alert('Éxito', 'La imagen y el monto han sido enviados con éxito.')
     } catch (error) {
-      console.error('Error in sendData:', error);
-      setUploading(false);
-      closeAmountModal();
+      console.error('Error in sendData:', error)
+      setUploading(false)
+      closeAmountModal()
       Alert.alert(
         'Error',
         'Hubo un problema al enviar la imagen y el monto. Inténtalo de nuevo.'
-      );
+      )
     }
-  };
+  }
 
   const deleteImage = async (uri) => {
-    await FileSystem.deleteAsync(uri);
-    setImages(images.filter((i) => i !== uri));
-  };
+    await FileSystem.deleteAsync(uri)
+    setImages(images.filter((i) => i !== uri))
+  }
 
   const renderItem = ({ item }) => {
-    const filename = item.split('/').pop();
+    const filename = item.split('/').pop()
     return (
       <TouchableOpacity onPress={() => openViewModal(item)}>
         <Card>
@@ -151,8 +151,8 @@ export default function ListaBoletas() {
           </View>
         </Card>
       </TouchableOpacity>
-    );
-  };
+    )
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, gap: 20, backgroundColor: '#033342' }}>
@@ -212,5 +212,5 @@ export default function ListaBoletas() {
       <View style={{ height: 40 }}></View>
       <BottomBar />
     </SafeAreaView>
-  );
+  )
 }

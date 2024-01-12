@@ -1,77 +1,77 @@
 // SECTOR DE IMPORTS UTILIZADOS
-import React, { useEffect, useState } from 'react';
-import { View, ImageBackground } from 'react-native';
-import { Text } from '@rneui/base';
+import React, { useEffect, useState } from 'react'
+import { View, ImageBackground } from 'react-native'
+import { Text } from '@rneui/base'
 // conexión api
-import { MontoMesBitacora, MontoBitacora, gastoMesBoletasApi, gastoMesFacturasApi } from '../../api.js';
-import styles from '../style';
+import { MontoMesBitacora, MontoBitacora, gastoMesBoletasApi, gastoMesFacturasApi } from '../../api.js'
+import styles from '../style'
 
 const Tarjeta = () => {
-  const [montoMes, setMontoMes] = useState('');
-  const [montoTotal, setMontoTotal] = useState('');
-  const [mesBoletas, setGastoMesBoletas] = useState('');
-  const [mesFacturas, setGastoMesFacturas] = useState('');
+  const [montoMes, setMontoMes] = useState('')
+  const [montoTotal, setMontoTotal] = useState('')
+  const [mesBoletas, setGastoMesBoletas] = useState('')
+  const [mesFacturas, setGastoMesFacturas] = useState('')
 
   useEffect(() => {
-    obtenerMontoMes();
-    obtenerMontoTotal();
-    obtenerGastoMesBoletas();
-    obtenerGastoMesFacturas();
-  }, []); 
+    obtenerMontoMes()
+    obtenerMontoTotal()
+    obtenerGastoMesBoletas()
+    obtenerGastoMesFacturas()
+  }, []) 
 
   const obtenerMontoMes = async () => {
     try {
-      const monto = await MontoMesBitacora();
+      const monto = await MontoMesBitacora()
       if (monto >= 0) {
-        setMontoMes(monto);
+        setMontoMes(monto)
       } else {
-        console.error('La respuesta de obtenerMontoMes no es válida:', monto);
+        console.error('La respuesta de obtenerMontoMes no es válida:', monto)
       }
     } catch (error) {
-      console.error('Error al obtener el monto del mes:', error);
+      console.error('Error al obtener el monto del mes:', error)
     }
-  };
+  }
 
   const obtenerGastoMesBoletas = async () => {
     try {
-      const monto = await gastoMesBoletasApi();
-      console.log(monto);
+      const monto = await gastoMesBoletasApi()
+      console.log(monto)
       if (monto >= 0) {
-        setGastoMesBoletas(monto);
+        setGastoMesBoletas(monto)
       } else {
-        console.error('La respuesta de gastoMesBoletas no es válida:', monto);
+        console.error('La respuesta de gastoMesBoletas no es válida:', monto)
       }
     } catch (error) {
-      console.error('Error al obtener el monto del mes:', error);
+      console.error('Error al obtener el monto del mes:', error)
     }
-  };
+  }
 
   const obtenerGastoMesFacturas = async () => {
     try {
-      const monto = await gastoMesFacturasApi();
-      console.log(monto);
+      const monto = await gastoMesFacturasApi()
+      console.log(monto)
       if (monto >= 0) {
-        setGastoMesFacturas(monto);
+        setGastoMesFacturas(monto)
       } else {
-        console.error('La respuesta de gastoMesFacturas no es válida:', monto);
+        console.error('La respuesta de gastoMesFacturas no es válida:', monto)
       }
     } catch (error) {
-      console.error('Error al obtener el monto del mes:', error);
+      console.error('Error al obtener el monto del mes:', error)
     }
-  };
+  }
 
   const obtenerMontoTotal = async () => {
     try {
-      const monto = await MontoBitacora();
+      const monto = await MontoBitacora()
       if (monto >= 0) {
-        setMontoTotal(monto);
+        setMontoTotal(monto)
       } else {
-        console.error('La respuesta de obtenerMontoTotal no es válida:', monto);
+        console.error('La respuesta de obtenerMontoTotal no es válida:', monto)
       }
     } catch (error) {
-      console.error('Error al obtener el monto total:', error);
+      console.error('Error al obtener el monto total:', error)
     }
-  };
+  }
 
   const SumGastos = () => {
     const gastoMesBoletasNumero = parseInt(mesBoletas, 10)
@@ -81,7 +81,7 @@ const Tarjeta = () => {
     const sumaGastos = gastoMesBoletasNumero + gastoMesFacturasNumero
   
     return sumaGastos
-  };
+  }
 
   const Balance = () => {
     const montoMesNumero = parseInt(montoMes, 10)
@@ -119,6 +119,6 @@ const Tarjeta = () => {
       
       </View>
     </ImageBackground>
-  );
-};
-export default Tarjeta;
+  )
+}
+export default Tarjeta

@@ -37,9 +37,9 @@ import HistoricoCliente from './src/mas/clientes/mant_cliente'
 import ListaMantenciones from './src/mas/mantenciones/listamantenciones'
 import AgregarMantencion from './src/mas/mantenciones/addmantenciones'
 import ListaBoletas from './src/mas/boletas/listaboletas'
-import SubirBoletas from './src/mas/boletas/subirboletas'
 import ListaFacturas from './src/mas/facturas/listafacturas'
-import SubirFacturas from './src/mas/facturas/subirfacturas'
+import Galeriaboletas from './src/mas/boletas/galeriarb'
+import Galeriafacturas from './src/mas/facturas/galeriarf'
 //-----------------------------------------------------------------
 //CÓDIGO CONTROLADOR DE LA APLICACIÓN
  export default function App() {
@@ -48,7 +48,7 @@ import SubirFacturas from './src/mas/facturas/subirfacturas'
       <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerStyle: { backgroundColor: "#08546c"}, headerTitleStyle: { color: "#ffffff"}, headerTitleAlign: "center"}}>
-        {/*<Stack.Screen name="Login" component={Login} options={{ headerShown: false, gestureEnabled: false }}/>*/}
+        {/*<Stack.Screen name="Login" component={Login} options={{ headerShown: false, gestureEnabled: false, gestureDirection: Login }}/>*/}
         <Stack.Screen name="Inicio" component ={Inicio} options={({navigation}) => ({
           headerRight: () => (
             <View style ={{ flexDirection: 'row', marginRight: 15}}>
@@ -84,21 +84,21 @@ import SubirFacturas from './src/mas/facturas/subirfacturas'
         })}/>
         <Stack.Screen name='Agregar Nueva Cita' component={AgregarCita}/>
         <Stack.Screen name='Más' component={ListaMas}/>
-        <Stack.Screen name='Boletas' component={ListaBoletas} /*options={({navigation}) => ({ headerRight: () => (
-          <TouchableOpacity onPress={() => navigation.navigate('Subir Boletas')}>
-            <FontAwesome size = {24} color= "#fff" name = 'plus-square'/>
+        <Stack.Screen name='Boletas' component={ListaBoletas} options={({navigation}) => ({ headerRight: () => (
+          <TouchableOpacity onPress={() => navigation.navigate('Boletas respaldadas')}>
+            <FontAwesome size = {24} color= "#fff" name = 'photo'/>
           </TouchableOpacity>
         ),
-        })}*/
+        })}
         />
-        <Stack.Screen name='Subir Boletas' component={SubirBoletas}/>
-        <Stack.Screen name='Facturas' component={ListaFacturas} /*options={({navigation}) => ({ headerRight: () => (
-          <TouchableOpacity onPress={() => navigation.navigate('Subir Facturas')}>
-            <FontAwesome size = {24} color= "#fff" name = 'plus-square'/>
+        <Stack.Screen name='Boletas respaldadas' component={Galeriaboletas}/>
+        <Stack.Screen name='Facturas' component={ListaFacturas} options={({navigation}) => ({ headerRight: () => (
+          <TouchableOpacity onPress={() => navigation.navigate('Facturas respaldadas')}>
+            <FontAwesome size = {24} color= "#fff" name = 'photo'/>
           </TouchableOpacity>
         ),
-        })}*//>
-        <Stack.Screen name='Subir Facturas' component={SubirFacturas}/>
+        })}/>
+        <Stack.Screen name='Facturas respaldadas' component={Galeriafacturas}/>
         <Stack.Screen name='Clientes' component={ListaCliente}options={({navigation}) => ({ headerRight: () => (
           <TouchableOpacity onPress={() => navigation.navigate('Agregar Cliente')}>
             <FontAwesome size = {24} color= "#fff" name = 'plus-square'/>

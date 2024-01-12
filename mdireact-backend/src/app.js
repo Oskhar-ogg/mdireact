@@ -11,6 +11,7 @@ const helmet = require('helmet');
 const agendaRoutes = require('./routes/agendaRoutes');
 const bitacoraRoutes = require('./routes/bitacoraRoutes');
 const boletasRoutes = require('./routes/boletasRoutes');
+const grabacionesRoutes = require('./routes/grabacionesRoutes');
 const inventarioRoutes = require('./routes/inventarioRoutes');
 const facturasRoutes = require('./routes/facturasRoutes');
 const tecnicoRoutes = require('./routes/tecnicoRoutes');
@@ -43,6 +44,7 @@ app.use(agendaRoutes);
 app.use(bitacoraRoutes);
 app.use(boletasRoutes);
 app.use(clientesRoutes);
+app.use(grabacionesRoutes);
 app.use(facturasRoutes);
 app.use(inventarioRoutes);
 app.use(tecnicoRoutes);
@@ -123,6 +125,8 @@ app.use('/docs/', swaggerUI.serve, swaggerUI.setup(specs));
 
 const indexPath = path.join(__dirname, 'index.html');
 const imageError = path.join(__dirname, 'images', 'ImagenNoDisponible.png');
+
+app.use('/uploads' , express.static(path.join(__dirname, 'uploads')));
 
 app.use('/images/404',(req, res) => res.sendFile(imageError));
 

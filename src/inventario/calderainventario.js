@@ -28,7 +28,7 @@ const CalderaInventario = () => {
       const response = await saveInventarioCaldera({
         ...inventarioData,
         inv_cal_cantidad: parseInt(inventarioData.inv_cal_cantidad, 10),
-      });
+      })
 
       setInventarioData({
         inv_cal_tipo_repuesto: '',
@@ -46,26 +46,26 @@ const CalderaInventario = () => {
   const handleEditarRepuesto = async () => {
     try {
       const { inv_cal_cantidad } = inventarioData
-      const { inv_cal_id } = selectedItem;
+      const { inv_cal_id } = selectedItem
   
       const response = await updateInventarioCaldera(
         inv_cal_id,  
         parseInt(inv_cal_cantidad, 10)
-      );
+      )
   
       setInventarioData({
         inv_cal_tipo_repuesto: '',
         inv_cal_marca_repuesto: '',
         inv_cal_ubicacion: '',
         inv_cal_cantidad: '',
-      });
+      })
   
-      setVisibleEditarModal(false);
-      fetchData(); // Refrescar los datos después de editar un repuesto
+      setVisibleEditarModal(false)
+      fetchData() // Refrescar los datos después de editar un repuesto
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
-  };
+  }
   
   
 
@@ -73,29 +73,29 @@ const incrementarCantidadEditar = () => {
   setInventarioData((prevData) => ({
     ...prevData,
     inv_cal_cantidad: (parseInt(prevData.inv_cal_cantidad, 10) + 1).toString(),
-  }));
-};
+  }))
+}
 
 const decrementarCantidadEditar = () => {
   setInventarioData((prevData) => {
-    const cantidad = parseInt(prevData.inv_cal_cantidad, 10);
-    const nuevaCantidad = cantidad > 0 ? (cantidad - 1).toString() : '0';
-    return { ...prevData, inv_cal_cantidad: nuevaCantidad };
-  });
-};
+    const cantidad = parseInt(prevData.inv_cal_cantidad, 10)
+    const nuevaCantidad = cantidad > 0 ? (cantidad - 1).toString() : '0'
+    return { ...prevData, inv_cal_cantidad: nuevaCantidad }
+  })
+}
 
 
 const handleBorrarRepuesto = async () => {
   try {
-    const { inv_cal_id } = selectedItem; // Obtener la ID desde selectedItem
-    console.log('Borrando repuesto con id:', inv_cal_id);
-    await deleteInventarioCaldera(inv_cal_id);
-    fetchData();
-    setVisibleEditarModal(false);
+    const { inv_cal_id } = selectedItem // Obtener la ID desde selectedItem
+    console.log('Borrando repuesto con id:', inv_cal_id)
+    await deleteInventarioCaldera(inv_cal_id)
+    fetchData()
+    setVisibleEditarModal(false)
   } catch (error) {
-    console.error(error);
+    console.error(error)
   }
-};
+}
 
 
   const handleInputChange = (key, value) => {
@@ -119,14 +119,14 @@ const handleBorrarRepuesto = async () => {
         brand: item.brand,
         cantidad: item.cantidad,
         ubicacion: item.ubicacion,
-      });
+      })
       setInventarioData({
         inv_cal_tipo_repuesto: item.name,
         inv_cal_marca_repuesto: item.brand,
         inv_cal_cantidad: item.cantidad,
         inv_cal_ubicacion: item.ubicacion,
-      });
-      setVisibleEditarModal(true);
+      })
+      setVisibleEditarModal(true)
     }
     
 

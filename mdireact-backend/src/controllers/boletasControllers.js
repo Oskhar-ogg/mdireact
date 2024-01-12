@@ -22,29 +22,21 @@ exports.saveBoleta = async (req, res) => {
 };
 
 exports.getBoleta = async (req, res) => {
+    const pool = conexiondb();
     try {
-        const pool = conexiondb(); 
-        const [rows] = await pool.query('SELECT * FROM boletas');
-        res.json(rows);
+        const sql = 'SELECT * FROM boletas';
+        
+        const result = await pool.query(sql);
+
+        const boletas = result[0].map(boleta => ({
+            imageURL: `http://146.83.194.142:1414/uploads/boletas/${boleta.boletas_imageURL}`,
+            valor: boleta.boletas_valor,
+            fecha: boleta.boletas_fecha
+        }));
+        res.status(200).json(boletas);
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Error al obtener las boletas:', error);
+        res.status(500).send('Error al obtener las boletas.');
     }
-};
+}
 
-
-// Controlador para eliminar una boleta
-exports.deleteBoleta = (req, res) => {
-    const boletaId = req.params.id;
-
-    
-    conexiondb.eliminarBoleta(boletaId)
-        .then(() => {
-            // Enviar una respuesta exitosa al cliente
-            res.status(200).json({ message: 'Boleta eliminada exitosamente' });
-        })
-        .catch((error) => {
-            // Manejar el error si ocurre durante la operación en la base de datos
-            res.status(500).json({ error: 'Error al eliminar la boleta de la base de datos' });
-        });
-};
