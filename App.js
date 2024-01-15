@@ -48,19 +48,18 @@ import Galeriafacturas from './src/mas/facturas/galeriarf'
       <PaperProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{headerStyle: { backgroundColor: "#08546c"}, headerTitleStyle: { color: "#ffffff"}, headerTitleAlign: "center"}}>
-        {<Stack.Screen name="Login" component={Login} options={{ headerShown: false, gestureEnabled: false, gestureDirection: Login }}/>}
+        <Stack.Screen name="Login" component={Login} options={{ headerShown: false, gestureEnabled: false, gestureDirection: Login }}/>
         <Stack.Screen name="Inicio" component ={Inicio} options={({navigation}) => ({
           headerRight: () => (
             <View style ={{ flexDirection: 'row', marginRight: 15}}>
               <TouchableOpacity onPress={()=>{ navigation.navigate('Perfil Especialista')}}><FontAwesome size={24} color="#fff" name='user' /></TouchableOpacity>
             </View>
           ),
-            headerLeft: () =>(
+           /* headerLeft: () =>(
               <TouchableOpacity onPress={() => navigation.navigate('Grabadora')}>
                 <FontAwesome size = {24} color= "#fff" name ='microphone'/>
               </TouchableOpacity>
-            ),
-        })}/>
+        */})}/>
         <Stack.Screen name='Inventario' component={MenuInventario} />
         <Stack.Screen name='Bombas de agua' component={BombaInventario} />
         <Stack.Screen name='Calderas' component={CalderaInventario} />

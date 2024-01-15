@@ -6,6 +6,7 @@ import { getClientes, deleteCliente, getClienteHistoricoCaldera, getClienteHisto
 import { useNavigation, useIsFocused } from '@react-navigation/native'
 import styles from '../../style'
 import BottomBar from '../../componentes/bottombar'
+import { Alert } from 'react-native';
 
 export default function ListaCliente() {
   const navigation = useNavigation()
@@ -73,10 +74,28 @@ export default function ListaCliente() {
 
   const borrarCliente = async (clienteId) => {
     try {
-      // Lógica para eliminar el cliente con la ID proporcionada
-      await deleteCliente(clienteId);
-      // Actualizar la lista de clientes después de la eliminación
-      await cargarCliente();
+      // Show confirmation alert
+      Alert.alert(
+        'Confirmar eliminación',
+        '¿Está seguro de que desea eliminar este cliente?',
+        [
+          {
+            text: 'Cancelar',
+            style: 'cancel',
+          },
+          {
+            text: 'Eliminar',
+            style: 'destructive',
+            onPress: async () => {
+              // Lógica para eliminar el cliente con la ID proporcionada
+              await deleteCliente(clienteId);
+              // Actualizar la lista de clientes después de la eliminación
+              await cargarCliente();
+            },
+          },
+        ],
+        { cancelable: true }
+      );
     } catch (error) {
       console.error(error);
     }
@@ -110,10 +129,11 @@ export default function ListaCliente() {
   };
   return (
     <Card theme={customCardTheme} style={{ alignItems: 'center' }} mode='outlined'>
-      <Card.Title title={'Nombre: ' + item.cliente_nombre + ' || ' + item.cliente_tipo} titleVariant='bodyLarge' />
+      <Card.Title title={'Nombre: ' + item.cliente_nombre } titleVariant='bodyLarge' />
       <Avatar.Image size={64} source={require('../../imagenes/avatar.png')} />
       <Card.Title title={'Número Telefónico: +56' + item.cliente_telefono} />
       <Card.Content>
+        <Text>Tipo cliente: {item.cliente_tipo}</Text>
         <Text>Dirección: {item.cliente_direccion}</Text>
         <Text>Comuna: {item.comuna_nombre}</Text>
       </Card.Content>

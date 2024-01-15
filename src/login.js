@@ -62,9 +62,7 @@ export default function Login() {
       >
         <View style={styles.bottomView}>
           <Card>
-            <Card.Title style={{ fontSize: 34, fontWeight: '300', color: 'blue', marginBottom: 15, padding: 20 }}>Bienvenido</Card.Title>
-            <Card.Divider />
-            <View style={{ marginTop: 20 }}>
+            <View style={{ marginTop: 5 }}>
               <Text style={{ color: 'blue' }}>Correo</Text>
               <TextInput
                 style={{ fontSize: 30, fontWeight: '300', color: '#333', marginBottom: 30, borderColor: 'gray', borderWidth: 0.2, borderRadius: 5 }}
@@ -78,7 +76,6 @@ export default function Login() {
                 keyboardType="email-address"
                 leftIcon={{ type: 'MaterialIcons', name: 'contact-mail' }}
               />
-              <Card.Divider />
               <Text style={{ color: 'blue' }}>Contraseña</Text>
               <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                 <TextInput

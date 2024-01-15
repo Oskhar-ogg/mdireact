@@ -41,6 +41,17 @@ const Verbitacora = ({ route }) => {
     fetchData()
   }, [bitacora_id])
 
+  const customCardTheme = {
+    colors: {
+      primary: '#ffffff', // Color del encabezado
+      text: '#000000', // Color del texto
+      background: '#000000', // Color del fondo
+      placeholder: '#000000', // Color del marcador de posición
+      surface: '', // Color de la superficie
+      accent: '#ffffff', // Color de acento
+    },
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.container}>
@@ -48,7 +59,7 @@ const Verbitacora = ({ route }) => {
           data={bitacora}
           keyExtractor={(item) => item.bitacora_id.toString()}
           renderItem={({ item }) => (
-            <Card>
+            <Card theme={customCardTheme} mode='outlined'>
               <Card.Title
                 title={new Date(item.bitacora_fecha).toLocaleDateString('es-ES', {
                   timeZone: 'UTC', // Ajusta esto según el huso horario correcto

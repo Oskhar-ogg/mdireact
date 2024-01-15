@@ -44,7 +44,7 @@ const styles = {
 
     Text: {
         color: '#fff',
-        fontSize: 24,
+        fontSize: 16,
         fontWeight: 'bold',
         textAlign: 'center',
     },
@@ -66,7 +66,7 @@ const styles = {
 
     TextCardBottom: {
         color: 'green',
-        fontSize: 22,
+        fontSize: 10,
         fontWeight: 'bold',
         textAlign:'center',
         textAlignVertical:'bottom',
@@ -74,7 +74,7 @@ const styles = {
 
     TextCardBottom2: {
         color: 'orange',
-        fontSize: 22,
+        fontSize: 10,
         fontWeight: 'bold',
         textAlign: 'center',
         textAlignVertical: 'bottom',

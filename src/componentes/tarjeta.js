@@ -8,13 +8,13 @@ import styles from '../style'
 
 const Tarjeta = () => {
   const [montoMes, setMontoMes] = useState('')
-  const [montoTotal, setMontoTotal] = useState('')
+  /*const [montoTotal, setMontoTotal] = useState('')*/
   const [mesBoletas, setGastoMesBoletas] = useState('')
   const [mesFacturas, setGastoMesFacturas] = useState('')
 
   useEffect(() => {
     obtenerMontoMes()
-    obtenerMontoTotal()
+    /*obtenerMontoTotal()*/
     obtenerGastoMesBoletas()
     obtenerGastoMesFacturas()
   }, []) 
@@ -60,7 +60,7 @@ const Tarjeta = () => {
     }
   }
 
-  const obtenerMontoTotal = async () => {
+  /*const obtenerMontoTotal = async () => {
     try {
       const monto = await MontoBitacora()
       if (monto >= 0) {
@@ -71,7 +71,7 @@ const Tarjeta = () => {
     } catch (error) {
       console.error('Error al obtener el monto total:', error)
     }
-  }
+  }*/
 
   const SumGastos = () => {
     const gastoMesBoletasNumero = parseInt(mesBoletas, 10)
@@ -98,10 +98,7 @@ const Tarjeta = () => {
     <ImageBackground source={require('../../assets/tarjeta.jpg')} style={styles.image}>
       <View style={styles.textContainer}>
         <Text h3 style={styles.Text}>
-          Bienvenido
-        </Text>
-        <Text h4 style={styles.TextCardBottom}>
-          Ingreso acumulado = ${montoTotal}
+          Bienvenido a MDIAPP
         </Text>
         <Text h4 style={styles.TextCardBottom}>
           Ingreso mes = ${montoMes}
